@@ -1,8 +1,5 @@
-package project.GUI;
-
 import java.util.ArrayList;
 import java.util.Random;
-
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -28,9 +25,12 @@ public class GUI extends Application{
 	int width = 1000;
 	int height = 800;
 	int scale = 25;
-	Grid grid;
 	int secondsDown;
 	ObservableList<Node> ObservableList;
+	
+	Button permanentGCS;
+	Button temporaryGCS;
+	boolean test = false;
 
 	Rectangle[] GCSStatusArray;
 	
@@ -43,9 +43,7 @@ public class GUI extends Application{
 		
 		Stage stage = primaryStage;
 		root = new AnchorPane();
-		grid = new Grid();
 		ObservableList = root.getChildren();
-		grid.drawGrid(ObservableList, scale);
 		
 		final TextField ChaosMonkey = new TextField();
 		ChaosMonkey.setText("Chaos Monkey");
@@ -71,8 +69,7 @@ public class GUI extends Application{
 			@Override
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
-				permanentStation = true;
-				
+				test = true;
 			}
 			
 		});
@@ -82,7 +79,7 @@ public class GUI extends Application{
 			@Override
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
-				temporaryStation = true;
+				test = true;
 				Random rand = new Random();
 				secondsDown = rand.nextInt(5)+1;
 			}
