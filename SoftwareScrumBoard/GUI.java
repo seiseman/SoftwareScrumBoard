@@ -29,8 +29,11 @@ public class GUI extends Application{
 	int secondsDown;
 	ObservableList<Node> ObservableList;
 
-	Button permanentGCS;
-	Button temporaryGCS;
+	Button userStories;
+	Button productBacklog;
+	Button sprintBacklog;
+	Button scrumBoard;
+	Button burndown;
 	boolean test = false;
 
 	Rectangle[] GCSStatusArray;
@@ -46,60 +49,94 @@ public class GUI extends Application{
 		root = new AnchorPane();
 		ObservableList = root.getChildren();
 
-		final Text ChaosMonkey = new Text();
-		ChaosMonkey.setText("Chaos Monkey");
-		ChaosMonkey.setFont(Font.font("Verdana", FontWeight.BOLD, 30));
-		ChaosMonkey.prefWidth(375);
-		ChaosMonkey.setLayoutX(10);
-		ChaosMonkey.setLayoutY(10);
-		ChaosMonkey.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
-		//ChaosMonkey.setEditable(false);
-		root.getChildren().add(ChaosMonkey);
-
-		permanentGCS = new Button("permanent");
-		temporaryGCS = new Button("temporary ");
-		permanentGCS.setLayoutX(500);
-		permanentGCS.setLayoutY(10);
-		temporaryGCS.setLayoutX(500);
-		temporaryGCS.setLayoutY(40);
-		root.getChildren().add(permanentGCS);
-		root.getChildren().add(temporaryGCS);
-
-		permanentGCS.setOnAction(new EventHandler<ActionEvent>() {
+		scrumBoard = new Button("Scrum Board");
+		scrumBoard.setLayoutX(600);
+		scrumBoard.setLayoutY(0);
+		scrumBoard.setPrefWidth(200);
+		root.getChildren().add(scrumBoard);
+		
+		scrumBoard.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
 				test = true;
 			}
-
 		});
-
-		temporaryGCS.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				// TODO Auto-generated method stub
-				test = true;
-				Random rand = new Random();
-				secondsDown = rand.nextInt(5)+1;
-			}
-
-		});
-
-
-
-		final Text statusBar = new Text();
-		statusBar.setText("Status");
-		statusBar.setFont(Font.font("Verdana", FontWeight.BOLD, 30));
-		statusBar.prefWidth(375);
-		statusBar.prefHeight(65);
-		statusBar.setLayoutX(10);
-		statusBar.setLayoutY(80);
-		statusBar.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
+		
+		final TextField scrum = new TextField();
+		scrum.setText("Scrum Board");
+		scrum.setFont(Font.font("Verdana", FontWeight.BOLD, 30));
+		scrum.setPrefWidth(980);
+		scrum.setLayoutX(10);
+		scrum.setLayoutY(40);
+		scrum.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
 		//statusBar.setEditable(false);
-		root.getChildren().add(statusBar);
+		root.getChildren().add(scrum);
+		
+		userStories = new Button("User Stories");
+		userStories.setLayoutX(0);
+		userStories.setLayoutY(0);
+		userStories.setPrefWidth(200);
+		root.getChildren().add(userStories);
 
+		userStories.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				// TODO Auto-generated method stub
+				test = true;
+			}
+
+		});
+
+		productBacklog = new Button("Product Backlog");
+		productBacklog.setLayoutX(200);
+		productBacklog.setLayoutY(0);
+		productBacklog.setPrefWidth(200);
+		root.getChildren().add(productBacklog);
+		
+		productBacklog.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				// TODO Auto-generated method stub
+				test = true;
+			}
+
+		});
+		
+		sprintBacklog = new Button("Sprint Backlog");
+		sprintBacklog.setLayoutX(400);
+		sprintBacklog.setLayoutY(0);
+		sprintBacklog.setPrefWidth(200);
+		root.getChildren().add(sprintBacklog);
+		
+		sprintBacklog.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				// TODO Auto-generated method stub
+				test = true;
+			}
+		});
+		
+		burndown = new Button("Burndown Chart");
+		burndown.setLayoutX(800);
+		burndown.setLayoutY(0);
+		burndown.setPrefWidth(200);
+		root.getChildren().add(burndown);
+		
+		burndown.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				// TODO Auto-generated method stub
+				test = true;
+			}
+		});
+
+		/*
 		GCSStatusArray = new Rectangle[2];
 		GCSStatusArray[0] = new Rectangle(85,30);
 		GCSStatusArray[0].setFill(Color.SPRINGGREEN);
@@ -111,6 +148,7 @@ public class GUI extends Application{
 		GCSStatusArray[1].setLayoutX(500);
 		GCSStatusArray[1].setLayoutY(115);
 		root.getChildren().add(GCSStatusArray[1]);
+		*/
 
 		scene = new Scene(root, width, height);
 		stage.setScene(scene);
