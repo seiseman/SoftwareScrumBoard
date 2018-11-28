@@ -21,7 +21,7 @@
             prefWidth="200" layoutX="200" layoutY="0"
             onAction="#helloWorld">
     </Button>
-    <Button text="Spring Backlog"
+    <Button text="Sprint Backlog"
             prefWidth="200" layoutX="400" layoutY="0"
             onAction="#helloWorld">
     </Button>
