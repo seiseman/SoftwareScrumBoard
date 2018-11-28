@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.FontWeight?>
+
+
+<AnchorPane fx:controller="scrum.ScrumController" xmlns:fx="http://javafx.com/fxml/1">
+	<!-- Add New Drone Button -->
+    <Button text="Scrum Board"
+            prefWidth="200" layoutX="600" layoutY="0"
+            onAction="#helloWorld">
+    </Button>
+        <Button text="User Stories"
+            prefWidth="200" layoutX="0" layoutY="0"
+            onAction="#helloWorld">
+    </Button>
+    <Button text="Product Backlog"
+            prefWidth="200" layoutX="200" layoutY="0"
+            onAction="#helloWorld">
+    </Button>
+    <Button text="Spring Backlog"
+            prefWidth="200" layoutX="400" layoutY="0"
+            onAction="#helloWorld">
+    </Button>
+    <Button text="Burndown Chart"
+            prefWidth="200" layoutX="800" layoutY="0"
+            onAction="#helloWorld">
+    </Button>
+    <TextField text="Scrum Board" prefWidth="980" layoutX="10" layoutY="40"
+    			style="-fx-background-color: transparent;-fx-border-color:black;" editable="false">
+	        <font>
+            	<Font name="Verdana Bold" size="30" >
+            	</Font>
+        	</font>
+    </TextField>
+    <TextField text="Stories" prefWidth="196" layoutX="10" layoutY="120"
+    			style="-fx-background-color: transparent;-fx-border-color:black;" editable="false">
+	        <font>
+            	<Font name="Verdana" size="20" >
+            	</Font>
+        	</font>
+    </TextField>
+    <TextField text="To Do" prefWidth="196" layoutX="206" layoutY="120"
+    			style="-fx-background-color: transparent;-fx-border-color:black;" editable="false">
+	        <font>
+            	<Font name="Verdana" size="20" >
+            	</Font>
+        	</font>
+    </TextField>
+    <TextField text="In Progress" prefWidth="196" layoutX="402" layoutY="120"
+    			style="-fx-background-color: transparent;-fx-border-color:black;" editable="false">
+	        <font>
+            	<Font name="Verdana" size="20" >
+            	</Font>
+        	</font>
+    </TextField>
+    <TextField text="Testing" prefWidth="196" layoutX="598" layoutY="120"
+    			style="-fx-background-color: transparent;-fx-border-color:black;" editable="false">
+	        <font>
+            	<Font name="Verdana" size="20" >
+            	</Font>
+        	</font>
+    </TextField>
+    <TextField text="Done" prefWidth="196" layoutX="794" layoutY="120"
+    			style="-fx-background-color: transparent;-fx-border-color:black;" editable="false">
+	        <font>
+            	<Font name="Verdana" size="20" >
+            	</Font>
+        	</font>
+    </TextField>
+    <TextField fx:id="storiesEdit" text="" prefWidth="196" prefHeight="630" layoutX="10" layoutY="160"
+    			style="-fx-background-color: transparent;-fx-border-color:black;">
+	        <font>
+            	<Font name="Verdana" size="20" >
+            	</Font>
+        	</font>
+    </TextField>
+    <TextField fx:id="toDoEdit" text="" prefWidth="196" prefHeight="630" layoutX="206" layoutY="160"
+    			style="-fx-background-color: transparent;-fx-border-color:black;">
+	        <font>
+            	<Font name="Verdana" size="20" >
+            	</Font>
+        	</font>
+    </TextField>
+    <TextField fx:id="inProgressEdit" text="" prefWidth="196" prefHeight="630" layoutX="402" layoutY="160"
+    			style="-fx-background-color: transparent;-fx-border-color:black;">
+	        <font>
+            	<Font name="Verdana" size="20" >
+            	</Font>
+        	</font>
+    </TextField>
+    <TextField fx:id="testingEdit" text="" prefWidth="196" prefHeight="630" layoutX="598" layoutY="160"
+    			style="-fx-background-color: transparent;-fx-border-color:black;">
+	        <font>
+            	<Font name="Verdana" size="20" >
+            	</Font>
+        	</font>
+    </TextField>
+    <TextField fx:id="doneEdit" text="" prefWidth="196" prefHeight="630" layoutX="794" layoutY="160"
+    			style="-fx-background-color: transparent;-fx-border-color:black;">
+	        <font>
+            	<Font name="Verdana" size="20" >
+            	</Font>
+        	</font>
+    </TextField>
+</AnchorPane>
+

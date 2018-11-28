@@ -1,3 +1,4 @@
+package scrum;
 
 abstract class Test {
 
