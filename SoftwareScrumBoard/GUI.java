@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,7 +20,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 
 public class GUI extends Application{
-	
+
 	Pane root;
 	Scene scene;
 	int width = 1000;
@@ -27,34 +28,34 @@ public class GUI extends Application{
 	int scale = 25;
 	int secondsDown;
 	ObservableList<Node> ObservableList;
-	
+
 	Button permanentGCS;
 	Button temporaryGCS;
 	boolean test = false;
 
 	Rectangle[] GCSStatusArray;
-	
+
 	public static void main(String[] args) {
 		launch(args);
 	}
-	
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		
+
 		Stage stage = primaryStage;
 		root = new AnchorPane();
 		ObservableList = root.getChildren();
-		
-		final TextField ChaosMonkey = new TextField();
+
+		final Text ChaosMonkey = new Text();
 		ChaosMonkey.setText("Chaos Monkey");
 		ChaosMonkey.setFont(Font.font("Verdana", FontWeight.BOLD, 30));
-		ChaosMonkey.setPrefWidth(375);
+		ChaosMonkey.prefWidth(375);
 		ChaosMonkey.setLayoutX(10);
 		ChaosMonkey.setLayoutY(10);
 		ChaosMonkey.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
-		ChaosMonkey.setEditable(false);
+		//ChaosMonkey.setEditable(false);
 		root.getChildren().add(ChaosMonkey);
-	
+
 		permanentGCS = new Button("permanent");
 		temporaryGCS = new Button("temporary ");
 		permanentGCS.setLayoutX(500);
@@ -63,7 +64,7 @@ public class GUI extends Application{
 		temporaryGCS.setLayoutY(40);
 		root.getChildren().add(permanentGCS);
 		root.getChildren().add(temporaryGCS);
-		
+
 		permanentGCS.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -71,9 +72,9 @@ public class GUI extends Application{
 				// TODO Auto-generated method stub
 				test = true;
 			}
-			
+
 		});
-		
+
 		temporaryGCS.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -83,22 +84,22 @@ public class GUI extends Application{
 				Random rand = new Random();
 				secondsDown = rand.nextInt(5)+1;
 			}
-			
+
 		});
-		
-		
-		
-		final TextField statusBar = new TextField();
+
+
+
+		final Text statusBar = new Text();
 		statusBar.setText("Status");
 		statusBar.setFont(Font.font("Verdana", FontWeight.BOLD, 30));
-		statusBar.setPrefWidth(375);
-		statusBar.setPrefHeight(65);
+		statusBar.prefWidth(375);
+		statusBar.prefHeight(65);
 		statusBar.setLayoutX(10);
 		statusBar.setLayoutY(80);
 		statusBar.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
-		statusBar.setEditable(false);
+		//statusBar.setEditable(false);
 		root.getChildren().add(statusBar);
-		
+
 		GCSStatusArray = new Rectangle[2];
 		GCSStatusArray[0] = new Rectangle(85,30);
 		GCSStatusArray[0].setFill(Color.SPRINGGREEN);
@@ -110,46 +111,46 @@ public class GUI extends Application{
 		GCSStatusArray[1].setLayoutX(500);
 		GCSStatusArray[1].setLayoutY(115);
 		root.getChildren().add(GCSStatusArray[1]);
-		
+
 		scene = new Scene(root, width, height);
 		stage.setScene(scene);
 		stage.setTitle("NNX Drone Simulation");
-		stage.show();	
-		
+		stage.show();
+
 		new AnimationTimer() {
 			int count = 0;
 			@Override
 			public void handle(long now) {
-				
+
 			}
 		}.start();
-		
+
 		new AnimationTimer() {
 			int count = 0;
 			@Override
 			public void handle(long now) {
-				
+
 			}
 		}.start();
-		
+
 		new AnimationTimer() {
 			int count = 0;
 			@Override
 			public void handle(long now) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 		}.start();
-		
+
 		new AnimationTimer() {
 			int count = 0;
 			@Override
 			public void handle(long now) {
 				// TODO Auto-generated method stub
 			}
-			
+
 		}.start();
 	}
-	
+
 }
