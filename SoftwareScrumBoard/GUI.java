@@ -71,7 +71,6 @@ public class GUI extends Application{
 		scrum.setLayoutX(10);
 		scrum.setLayoutY(40);
 		scrum.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
-		//statusBar.setEditable(false);
 		root.getChildren().add(scrum);
 		
 		userStories = new Button("User Stories");
@@ -135,6 +134,101 @@ public class GUI extends Application{
 				test = true;
 			}
 		});
+		
+		final TextField stories = new TextField();
+		stories.setText("Stories");
+		stories.setFont(Font.font("Verdana", 20));
+		stories.setPrefWidth(196);
+		stories.setLayoutX(10);
+		stories.setLayoutY(120);
+		stories.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
+		root.getChildren().add(stories);
+		
+		final TextField storiesEdit = new TextField();
+		storiesEdit.setFont(Font.font("Verdana", 20));
+		storiesEdit.setPrefWidth(196);
+		storiesEdit.setPrefHeight(630);
+		storiesEdit.setLayoutX(10);
+		storiesEdit.setLayoutY(160);
+		storiesEdit.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
+		storiesEdit.setEditable(true);
+		root.getChildren().add(storiesEdit);
+		
+		final TextField toDo = new TextField();
+		toDo.setText("To Do");
+		toDo.setFont(Font.font("Verdana", 20));
+		toDo.setPrefWidth(196);
+		toDo.setLayoutX(206);
+		toDo.setLayoutY(120);
+		toDo.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
+		root.getChildren().add(toDo);
+		
+		final TextField toDoEdit = new TextField();
+		toDoEdit.setFont(Font.font("Verdana", 20));
+		toDoEdit.setPrefWidth(196);
+		toDoEdit.setPrefHeight(630);
+		toDoEdit.setLayoutX(206);
+		toDoEdit.setLayoutY(160);
+		toDoEdit.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
+		toDoEdit.setEditable(true);
+		root.getChildren().add(toDoEdit);
+		
+		final TextField inProgress = new TextField();
+		inProgress.setText("In Progress");
+		inProgress.setFont(Font.font("Verdana", 20));
+		inProgress.setPrefWidth(196);
+		inProgress.setLayoutX(402);
+		inProgress.setLayoutY(120);
+		inProgress.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
+		root.getChildren().add(inProgress);
+		
+		final TextField inProgressEdit = new TextField();
+		inProgressEdit.setFont(Font.font("Verdana", 20));
+		inProgressEdit.setPrefWidth(196);
+		inProgressEdit.setPrefHeight(630);
+		inProgressEdit.setLayoutX(402);
+		inProgressEdit.setLayoutY(160);
+		inProgressEdit.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
+		inProgressEdit.setEditable(true);
+		root.getChildren().add(inProgressEdit);
+		
+		final TextField testing = new TextField();
+		testing.setText("Testing");
+		testing.setFont(Font.font("Verdana", 20));
+		testing.setPrefWidth(196);
+		testing.setLayoutX(598);
+		testing.setLayoutY(120);
+		testing.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
+		root.getChildren().add(testing);
+		
+		final TextField testingEdit = new TextField();
+		testingEdit.setFont(Font.font("Verdana", 20));
+		testingEdit.setPrefWidth(196);
+		testingEdit.setPrefHeight(630);
+		testingEdit.setLayoutX(598);
+		testingEdit.setLayoutY(160);
+		testingEdit.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
+		testingEdit.setEditable(true);
+		root.getChildren().add(testingEdit);
+		
+		final TextField done = new TextField();
+		done.setText("Done");
+		done.setFont(Font.font("Verdana", 20));
+		done.setPrefWidth(196);
+		done.setLayoutX(794);
+		done.setLayoutY(120);
+		done.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
+		root.getChildren().add(done);
+		
+		final TextField doneEdit = new TextField();
+		doneEdit.setFont(Font.font("Verdana", 20));
+		doneEdit.setPrefWidth(196);
+		doneEdit.setPrefHeight(630);
+		doneEdit.setLayoutX(794);
+		doneEdit.setLayoutY(160);
+		doneEdit.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
+		doneEdit.setEditable(true);
+		root.getChildren().add(doneEdit);
 
 		/*
 		GCSStatusArray = new Rectangle[2];
@@ -149,6 +243,8 @@ public class GUI extends Application{
 		GCSStatusArray[1].setLayoutY(115);
 		root.getChildren().add(GCSStatusArray[1]);
 		*/
+		
+		
 
 		scene = new Scene(root, width, height);
 		stage.setScene(scene);
