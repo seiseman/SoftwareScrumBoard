@@ -78,7 +78,7 @@
             	</Font>
         	</font>
     </TextField>
-    <TextField fx:id="toDoEdit" text="" prefWidth="196" prefHeight="630" layoutX="206" layoutY="160"
+    <TextField fx:id="toDoEdit" text="" prefWidth="196" prefHeight="630" layoutX="206" layoutY="160" editable="false"
     			style="-fx-background-color: transparent;-fx-border-color:black;">
 	        <font>
             	<Font name="Verdana" size="20" >
