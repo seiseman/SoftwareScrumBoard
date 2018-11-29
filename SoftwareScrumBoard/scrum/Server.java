@@ -96,7 +96,16 @@ class ClientMessageHandler implements Runnable {
 	}
 	
 	public void handleUpdate(String message) {
+		String component = message.split(" ")[0];
 		ql.lock();
+		ol.lock();
+		String owner = owners.get(component);
+		if(owner != null) {
+			if(owner.compareTo(clientID) == 0) {
+				owners.put(component, "none");
+			}
+		}
+		ol.unlock();
 		for(LinkedBlockingQueue<String> q: updateQueues) {
 			q.offer(message);
 		}
@@ -124,6 +133,7 @@ class ClientMessageHandler implements Runnable {
 		String popped = "";
 		ql.lock();
 		popped = updateQueues.get(Integer.parseInt(clientID)).poll();
+		System.out.println("my message: " + popped);
 		if(popped != null) {
 			message = popped;
 		}
