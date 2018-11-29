@@ -72,10 +72,26 @@ class ClientWriter implements Runnable {
 		try {
 			PrintWriter outputToClient = new PrintWriter(socket.getOutputStream());
 			while(true) {
-				String message = q.poll();
-				if (message != null) {
-					outputToClient.println("I got your messages, so I am sending you this update");
-					System.out.println("I got the message: " + message);
+				try {
+					int message = Integer.parseInt(q.poll()); //This needs to be an UpdateMessage or some other custom type
+					switch(message) {
+						case ScrumChatConstants.SEND_EDIT_REQUEST: {
+							//should this actually be something server looks for?
+						}
+						case ScrumChatConstants.SEND_UPDATE: {
+							//format a message to update a client about what has changed
+						}
+						case ScrumChatConstants.GET_EDIT_REQUEST: {
+							//pop another message from the queue
+							//this message should be the object to be edited
+						}
+						case ScrumChatConstants.GET_UPDATE: {
+							//should the server care about this?
+						}
+					}
+
+				} catch (NumberFormatException e) {
+
 				}
 			}
 		} catch (IOException e) {
