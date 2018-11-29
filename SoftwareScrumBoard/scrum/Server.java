@@ -6,6 +6,8 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Date;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import javafx.application.Platform;
 import javafx.scene.control.TextArea;
@@ -13,8 +15,12 @@ import javafx.scene.control.TextArea;
 public class Server {
 	private ServerSocket ss;
 	private int clientID = 0;
+	private LinkedBlockingQueue<UpdateMessage> q;
+	private LinkedBlockingQueue<String> fakeQ; //this is only here so we dont need to update messages yet, we'll just use strings
 
 	Server() {
+		q = new LinkedBlockingQueue<>();
+		fakeQ = new LinkedBlockingQueue<>();
 		new Thread( () -> {
 		try {
 	        // Create a server socket
@@ -32,8 +38,12 @@ public class Server {
 	              " at " + new Date() + '\n');
 	            });
 */
-	          // Create and start a new thread for the connection
-	          new Thread(new HandleAClient(socket,clientID)).start();
+	          // Create and start a new thread for listening to the connection
+	          new Thread(new ClientListen(socket,clientID, fakeQ)).start();
+
+	        //Create and start a new thread for writing to the connection
+	          new Thread(new ClientWriter(socket, clientID, fakeQ)).start();
+
 	        }
 	      }
 	      catch(IOException ex) {
@@ -47,29 +57,65 @@ public class Server {
 	}
 }
 
-class HandleAClient implements Runnable {
+class ClientWriter implements Runnable {
+	private Socket socket;
+	private int clientID;
+	LinkedBlockingQueue<String> q;
+
+	public ClientWriter(Socket socket, int clientID, LinkedBlockingQueue<String> queue) {
+		q = queue;
+    	this.socket = socket;
+    	this.clientID = clientID;
+	}
+
+	public void run() {
+		try {
+			PrintWriter outputToClient = new PrintWriter(socket.getOutputStream());
+			while(true) {
+				String message = q.poll();
+				if (message != null) {
+					outputToClient.println("I got your messages, so I am sending you this update");
+					System.out.println("I got the message: " + message);
+				}
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+        	socket.close();
+        } catch (IOException e) {
+        	// TODO Auto-generated catch block
+        	e.printStackTrace();
+        }
+	}
+}
+
+class ClientListen implements Runnable {
     private Socket socket; // A connected socket
     //private Transcript transcript; // Reference to shared transcript
     //private TextArea textArea;
-    private String handle;
+    //private String handle;
     private int clientID;
+    LinkedBlockingQueue<String> q;
 
-    public HandleAClient(Socket socket, int clientID) {
-      this.socket = socket;
-      this.clientID = clientID;
-      //this.transcript = transcript;
-      //this.textArea = textArea;
+    public ClientListen(Socket socket, int clientID, LinkedBlockingQueue<String> queue) {
+    	q = queue;
+    	this.socket = socket;
+    	this.clientID = clientID;
     }
 
     public void run() {
     	try {
             // Create reading and writing streams
             BufferedReader inputFromClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintWriter outputToClient = new PrintWriter(socket.getOutputStream());
+            //PrintWriter outputToClient = new PrintWriter(socket.getOutputStream());
 
             // Continuously serve the client
             while (true) {
-            	System.out.println(inputFromClient.readLine());
+            	String message = inputFromClient.readLine();
+            	q.add(message);
+            	System.out.println();
             }
     	}
     	catch(IOException ex) {
