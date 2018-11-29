@@ -119,7 +119,6 @@ class ClientMessageHandler implements Runnable {
 		if(owner != null) {
 			if(owner.compareTo(clientID) == 0) {
 				success = "true";
-				owners.put(message, "none");
 			}
 		}
 		ol.unlock();
