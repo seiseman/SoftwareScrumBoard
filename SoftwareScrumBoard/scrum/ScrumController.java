@@ -19,6 +19,9 @@ public class ScrumController implements Initializable {
 	
 	private ScrumClientGateway gateway;
 	
+	// TODO. We want one for EVERY component
+	private boolean id1Owner = false;
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		
@@ -27,7 +30,8 @@ public class ScrumController implements Initializable {
 		toDoEdit.setOnMouseClicked(e-> {
 			if(gateway.editRequest("id1").compareTo("true") == 0) {
 				toDoEdit.setEditable(true);
-				toDoEdit.requestFocus();
+				//toDoEdit.requestFocus();
+				id1Owner = true;
 			}
         });
 		/*toDoEdit.setOnAction(e-> {
@@ -39,9 +43,12 @@ public class ScrumController implements Initializable {
         
 		toDoEdit.focusedProperty().addListener((ov, oldV, newV) -> {
 			if (!newV) { // focus lost
-				String comment = "id1 " + toDoEdit.getText();
-				gateway.sendUpdate(comment);
-				toDoEdit.setEditable(false);
+				if(id1Owner) {
+					String comment = "id1 " + toDoEdit.getText();
+					gateway.sendUpdate(comment);
+					toDoEdit.setEditable(false);
+					id1Owner = false;
+				}
 			}
 		});
 		
