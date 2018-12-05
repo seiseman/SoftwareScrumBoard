@@ -138,7 +138,9 @@ public class UserStory {
 	}
 
 	public String toString() {
-		String str = id + "##" + description + "##" + story + "##" + status + "##" + comments + "##" + points + "##" + assignee + "##" + completionDay;
+		String str = id + "##" + description + "##" + story + "##" + status + "##" +
+					 comments + "##" + points + "##" + assignee + "##" + completionDay + "##" + textBox.getLayoutX() + "##"
+					 + textBox.getLayoutY();
 		return str;
 	}
 
@@ -151,6 +153,9 @@ public class UserStory {
 		points = Integer.parseInt(splitUpdates[6]);
 		assignee = splitUpdates[7];
 		completionDay = Integer.parseInt(splitUpdates[8]);
+		textBox.setText(story);
+		textBox.setLayoutX(Double.parseDouble(splitUpdates[9]));
+		textBox.setLayoutY(Double.parseDouble(splitUpdates[10]));
 
 	}
 

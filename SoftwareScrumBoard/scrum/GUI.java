@@ -50,7 +50,7 @@ public class GUI extends Application{
 	int width = 1000;
 	int height = 800;
 	int scale = 25;
-	ObservableList<Node> ObservableList;
+	static ObservableList<Node> ObservableList;
 	static UserStory selected;
 
 	//Information for different tabs and changing scenes
@@ -116,6 +116,7 @@ public class GUI extends Application{
 				newStory.setIsOwner(true);
 			}
 		});
+		ObservableList.add(newStory.getTextField());
 	}
 
 	@Override
