@@ -11,6 +11,7 @@ public class UserStory {
 	String title;
 	ArrayList<String> comments;
 	int points;
+	String assignee;
 	
 	public UserStory() {
 		
@@ -44,6 +45,10 @@ public class UserStory {
 		return this.points;
 	}
 	
+	public String getAssignee() {
+		return this.assignee;
+	}
+	
 	public void setName(String n) {
 		this.name = n;
 	}
@@ -70,6 +75,10 @@ public class UserStory {
 	
 	public void setPoints(int p) {
 		this.points = p;
+	}
+	
+	public void setAssignee(String a) {
+		this.assignee = a;
 	}
 	
 }
