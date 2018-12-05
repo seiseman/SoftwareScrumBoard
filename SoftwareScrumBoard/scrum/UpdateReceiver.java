@@ -44,7 +44,7 @@ class UpdateReceiver implements Runnable, ScrumChatConstants {
         		  UserStory newStory = new UserStory(newComment);
         		  System.out.println("HEY DOG");
         		  stories.add(newStory);
-        		  Platform.runLater(()->ObservableList.add(newStory.getTextField()));
+        		  Platform.runLater(()-> GUI.setUpTextField(newStory.getTextField(), newStory));
         	  }
         	  listLock.unlock();
           } else {

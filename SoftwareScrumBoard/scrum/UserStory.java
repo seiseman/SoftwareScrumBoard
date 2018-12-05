@@ -1,6 +1,7 @@
 package scrum;
 
 import javafx.scene.control.TextField;
+import javafx.scene.text.Font;
 
 public class UserStory {
 
@@ -41,6 +42,15 @@ public class UserStory {
 		points = Integer.parseInt(splitUpdates[6]);
 		assignee = splitUpdates[7];
 		completionDay = Integer.parseInt(splitUpdates[8]);
+		textBox = new TextField();
+		textBox.setEditable(false);
+		textBox.setFont(Font.font("Verdana", 20));
+		textBox.setPrefWidth(100);
+		textBox.setPrefHeight(75);
+		textBox.setStyle("-fx-background-color: white;-fx-border-color:black;");
+		textBox.setLayoutX(20);
+		textBox.setLayoutY(180);
+		textBox.setText(story);
 	}
 	
 	public void updateTextField() {

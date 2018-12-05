@@ -38,12 +38,12 @@ import javafx.scene.Node;
 
 public class GUI extends Application{
 
-	private double xoff = 50.0;
-	private double yoff = 37.5;
-	private ScrumClientGateway gateway;
-	private ReentrantLock listLock;
+	static double xoff = 50.0;
+	static double yoff = 37.5;
+	static ScrumClientGateway gateway;
+	ReentrantLock listLock;
 
-	Random randomGenerator = new Random();
+	static Random randomGenerator = new Random();
 	Pane root;
 	Stage stage;
 	Scene scene;
@@ -51,7 +51,7 @@ public class GUI extends Application{
 	int height = 800;
 	int scale = 25;
 	ObservableList<Node> ObservableList;
-	UserStory selected;
+	static UserStory selected;
 
 	//Information for different tabs and changing scenes
 	Button createStory, productBacklog, sprintBacklog, burndown, viewDetails;
@@ -70,6 +70,52 @@ public class GUI extends Application{
 
 	public static void main(String[] args) {
 		launch(args);
+	}
+	
+	public static void setUpTextField(TextField dragBox, UserStory newStory) {
+		dragBox.setOnMouseDragged(e -> {
+			if(newStory.getIsOwner()) {
+				dragBox.setLayoutX(e.getSceneX() - xoff);
+				dragBox.setLayoutY(e.getSceneY() - yoff);
+			}
+		});
+
+		dragBox.setOnMouseReleased(e -> {
+			if(newStory.getIsOwner()) {
+				dragBox.setLayoutX(e.getSceneX() - xoff);
+				dragBox.setLayoutX(e.getSceneX() - yoff);
+				double x = dragBox.getLayoutX();
+				double y = dragBox.getLayoutY();
+				if(x >= 0 && x < 206) {
+					newStory.setStatus("Stories");
+				}
+				else if(x >= 206 && x < 402) {
+					newStory.setStatus("To Do");
+				}
+				else if(x >= 402 && x < 598) {
+					newStory.setStatus("In Progress");
+				}
+				else if (x >= 598 && x < 794) {
+					newStory.setStatus("Testing");
+				}
+				else {
+					int low = 1;
+					int high = 30;
+					newStory.setStatus("Done");
+					newStory.setCompletionDay(randomGenerator.nextInt(high-low) + low);
+				}
+				String comment = "Update##" + newStory.toString();
+				gateway.sendUpdate(comment);
+				newStory.setIsOwner(false);
+			}
+		});
+
+		dragBox.setOnMouseClicked(e -> {
+			selected = newStory;
+			if(gateway.editRequest(newStory.getId()).compareTo("true") == 0) {
+				newStory.setIsOwner(true);
+			}
+		});
 	}
 
 	@Override
