@@ -113,7 +113,9 @@ class ClientMessageHandler implements Runnable {
 			il.lock();
 			component = String.valueOf(Server.id);
 			newestId = Server.id;
+			System.out.println(message);
 			message.replace("null", component);
+			System.out.println(message);
 			Server.id += 1;
 			il.unlock();
 		}

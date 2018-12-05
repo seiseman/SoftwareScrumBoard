@@ -145,7 +145,7 @@ public class UserStory {
 	}
 
 	public void consumeUpdate(String update) {
-		String[] splitUpdates = update.split(" ");
+		String[] splitUpdates = update.split("##");
 		description = splitUpdates[2];
 		story = splitUpdates[3];
 		status = splitUpdates[4];

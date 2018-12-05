@@ -30,7 +30,7 @@ class UpdateReceiver implements Runnable, ScrumChatConstants {
           if(updates.size() > 0) {
         	  /* This will need to change to be more general */
         	  String newComment = updates.remove(0);
-        	  String identifier = newComment.split(" ")[0];
+        	  String identifier = newComment.split("##")[1];
         	  boolean isFound = false;
         	  listLock.lock();
         	  for(UserStory s: stories) {
