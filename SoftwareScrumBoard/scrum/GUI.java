@@ -56,7 +56,7 @@ public class GUI extends Application{
 		scrumBoard.setLayoutY(0);
 		scrumBoard.setPrefWidth(200);
 		root.getChildren().add(scrumBoard);
-		
+
 		scrumBoard.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -65,7 +65,7 @@ public class GUI extends Application{
 				test = true;
 			}
 		});
-		
+
 		final TextField scrum = new TextField();
 		scrum.setText("Scrum Board");
 		scrum.setFont(Font.font("Verdana", FontWeight.BOLD, 30));
@@ -74,7 +74,7 @@ public class GUI extends Application{
 		scrum.setLayoutY(40);
 		scrum.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
 		root.getChildren().add(scrum);
-		
+
 		userStories = new Button("User Stories");
 		userStories.setLayoutX(0);
 		userStories.setLayoutY(0);
@@ -96,7 +96,7 @@ public class GUI extends Application{
 		productBacklog.setLayoutY(0);
 		productBacklog.setPrefWidth(200);
 		root.getChildren().add(productBacklog);
-		
+
 		productBacklog.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -106,13 +106,13 @@ public class GUI extends Application{
 			}
 
 		});
-		
+
 		sprintBacklog = new Button("Sprint Backlog");
 		sprintBacklog.setLayoutX(400);
 		sprintBacklog.setLayoutY(0);
 		sprintBacklog.setPrefWidth(200);
 		root.getChildren().add(sprintBacklog);
-		
+
 		sprintBacklog.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -121,13 +121,13 @@ public class GUI extends Application{
 				test = true;
 			}
 		});
-		
+
 		burndown = new Button("Burndown Chart");
 		burndown.setLayoutX(800);
 		burndown.setLayoutY(0);
 		burndown.setPrefWidth(200);
 		root.getChildren().add(burndown);
-		
+
 		burndown.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -136,7 +136,7 @@ public class GUI extends Application{
 				test = true;
 			}
 		});
-		
+
 		final TextField stories = new TextField();
 		stories.setText("Stories");
 		stories.setFont(Font.font("Verdana", 20));
@@ -145,7 +145,7 @@ public class GUI extends Application{
 		stories.setLayoutY(120);
 		stories.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
 		root.getChildren().add(stories);
-		
+
 		final TextField storiesEdit = new TextField();
 		storiesEdit.setFont(Font.font("Verdana", 20));
 		storiesEdit.setPrefWidth(196);
@@ -155,7 +155,7 @@ public class GUI extends Application{
 		storiesEdit.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
 		storiesEdit.setEditable(true);
 		root.getChildren().add(storiesEdit);
-		
+
 		final TextField toDo = new TextField();
 		toDo.setText("To Do");
 		toDo.setFont(Font.font("Verdana", 20));
@@ -164,7 +164,7 @@ public class GUI extends Application{
 		toDo.setLayoutY(120);
 		toDo.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
 		root.getChildren().add(toDo);
-		
+
 		final TextField toDoEdit = new TextField();
 		toDoEdit.setFont(Font.font("Verdana", 20));
 		toDoEdit.setPrefWidth(196);
@@ -174,7 +174,7 @@ public class GUI extends Application{
 		toDoEdit.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
 		toDoEdit.setEditable(true);
 		root.getChildren().add(toDoEdit);
-		
+
 		final TextField inProgress = new TextField();
 		inProgress.setText("In Progress");
 		inProgress.setFont(Font.font("Verdana", 20));
@@ -183,7 +183,7 @@ public class GUI extends Application{
 		inProgress.setLayoutY(120);
 		inProgress.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
 		root.getChildren().add(inProgress);
-		
+
 		final TextField inProgressEdit = new TextField();
 		inProgressEdit.setFont(Font.font("Verdana", 20));
 		inProgressEdit.setPrefWidth(196);
@@ -193,7 +193,7 @@ public class GUI extends Application{
 		inProgressEdit.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
 		inProgressEdit.setEditable(true);
 		root.getChildren().add(inProgressEdit);
-		
+
 		final TextField testing = new TextField();
 		testing.setText("Testing");
 		testing.setFont(Font.font("Verdana", 20));
@@ -202,7 +202,7 @@ public class GUI extends Application{
 		testing.setLayoutY(120);
 		testing.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
 		root.getChildren().add(testing);
-		
+
 		final TextField testingEdit = new TextField();
 		testingEdit.setFont(Font.font("Verdana", 20));
 		testingEdit.setPrefWidth(196);
@@ -212,7 +212,7 @@ public class GUI extends Application{
 		testingEdit.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
 		testingEdit.setEditable(true);
 		root.getChildren().add(testingEdit);
-		
+
 		final TextField done = new TextField();
 		done.setText("Done");
 		done.setFont(Font.font("Verdana", 20));
@@ -221,7 +221,7 @@ public class GUI extends Application{
 		done.setLayoutY(120);
 		done.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
 		root.getChildren().add(done);
-		
+
 		final TextField doneEdit = new TextField();
 		doneEdit.setFont(Font.font("Verdana", 20));
 		doneEdit.setPrefWidth(196);
@@ -245,48 +245,14 @@ public class GUI extends Application{
 		GCSStatusArray[1].setLayoutY(115);
 		root.getChildren().add(GCSStatusArray[1]);
 		*/
-		
-		
+
+
 
 		scene = new Scene(root, width, height);
 		stage.setScene(scene);
 		stage.setTitle("NNX Drone Simulation");
 		stage.show();
 
-		new AnimationTimer() {
-			int count = 0;
-			@Override
-			public void handle(long now) {
-
-			}
-		}.start();
-
-		new AnimationTimer() {
-			int count = 0;
-			@Override
-			public void handle(long now) {
-
-			}
-		}.start();
-
-		new AnimationTimer() {
-			int count = 0;
-			@Override
-			public void handle(long now) {
-				// TODO Auto-generated method stub
-
-			}
-
-		}.start();
-
-		new AnimationTimer() {
-			int count = 0;
-			@Override
-			public void handle(long now) {
-				// TODO Auto-generated method stub
-			}
-
-		}.start();
 	}
 
 }
