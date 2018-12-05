@@ -99,6 +99,21 @@ public class GUI extends Application{
 			@Override
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
+				TableView<UserStory> table = new TableView<UserStory>();
+				table.setEditable(true);
+				TableColumn titleCol = new TableColumn("Title");
+				titleCol.setMinWidth(100);
+				titleCol.setCellValueFactory(new PropertyValueFactory<UserStory, String>("story"));
+				ObservableList<UserStory> tableStories = FXCollections.observableArrayList();
+				for (UserStory s: stories) {
+					if (s.getStatus() != "Done") {
+						tableStories.add(s);
+					}
+				}
+				table.setItems(tableStories);
+				table.getColumns().addAll(titleCol);
+				productPane.getChildren().add(table);
+				
 				stage.setScene(productScene);
 				stage.setTitle("Product Backlog");
 				stage.showAndWait();
@@ -128,7 +143,6 @@ public class GUI extends Application{
 					tableStories.add(s);
 				}
 				table.setItems(tableStories);
-				System.out.println(table.getItems());
 				table.getColumns().addAll(titleCol);
 				
 				sprintPane.getChildren().add(table);
