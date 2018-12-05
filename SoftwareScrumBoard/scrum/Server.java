@@ -18,20 +18,21 @@ import javafx.scene.control.TextArea;
 public class Server {
 	private ServerSocket ss;
 	private int clientID = 0;
-	private LinkedBlockingQueue<UpdateMessage> q;
-	private ArrayList<LinkedBlockingQueue<String>> fakeQ; //this is only here so we dont need to update messages yet, we'll just use strings
+	private ArrayList<LinkedBlockingQueue<String>> q; //this is only here so we dont need to update messages yet, we'll just use strings
 	private LinkedBlockingQueue<String> log; // TODO: We will do this later. joining client should update to current version. keep track of and send all previous updates.
 	private HashMap<String, String> owners;
 	private ReentrantLock queuesLock;
 	private ReentrantLock ownersLock;
+	private ReentrantLock idLock;
+	private ReentrantLock logLock;
+	public static int id = 1;
 
 	//TODO It is recommended practice to always immediately follow a call to lock with a try block, most typically in a before/after construction such as:
 
 	Server() {
 		queuesLock = new ReentrantLock();
 		ownersLock = new ReentrantLock();
-		q = new LinkedBlockingQueue<>();
-		fakeQ = new  ArrayList<LinkedBlockingQueue<String>>();
+		q = new  ArrayList<LinkedBlockingQueue<String>>();
 		owners = new HashMap<String,String>();
 		new Thread( () -> {
 			try {
@@ -41,15 +42,9 @@ public class Server {
 				while (true) {
 					// Listen for a new connection request
 					Socket socket = ss.accept();
-					// Increment clientNo
-					/*	          Platform.runLater( () -> {
-	            // Display the client number
-	            textArea.appendText("Starting thread for client " + clientNo +
-	              " at " + new Date() + '\n');
-	            });
-					 */
+
 					// Create and start a new thread for listening to the connection
-					new Thread(new ClientMessageHandler(socket,clientID, fakeQ, owners, queuesLock, ownersLock)).start();
+					new Thread(new ClientMessageHandler(socket,clientID, q, owners, queuesLock, ownersLock, idLock, log, logLock)).start();
 					clientID++;
 
 				}
@@ -69,16 +64,24 @@ class ClientMessageHandler implements Runnable {
 	private Socket socket;
 	private String clientID;
 	ArrayList<LinkedBlockingQueue<String>> updateQueues;
+	LinkedBlockingQueue<String> log;
 	ReentrantLock ql;
 	ReentrantLock ol;
+	ReentrantLock il;
+	ReentrantLock ll;
 	HashMap<String, String> owners;
 
-	public ClientMessageHandler(Socket socket, int clientID, ArrayList<LinkedBlockingQueue<String>> updateQueues, HashMap<String, String> owners, ReentrantLock queuesLock, ReentrantLock ownersLock) {
+	public ClientMessageHandler(Socket socket, int clientID, ArrayList<LinkedBlockingQueue<String>> updateQueues,
+			HashMap<String, String> owners, ReentrantLock queuesLock, ReentrantLock ownersLock, ReentrantLock idLock,
+			LinkedBlockingQueue<String> log, ReentrantLock logLock) {
 		this.updateQueues = updateQueues;
 		this.socket = socket;
 		this.clientID = String.valueOf(clientID);
 		this.ql = queuesLock;
 		this.ol = ownersLock;
+		this.il = idLock;
+		this.ll = logLock;
+		this.log = log;
 		this.owners = owners;
 		this.ql.lock();
 		updateQueues.add(new LinkedBlockingQueue<String>());
@@ -94,24 +97,43 @@ class ClientMessageHandler implements Runnable {
 		}
 		ol.unlock();
 	}
-	
+
 	public void handleUpdate(String message) {
-		String component = message.split(" ")[0];
+		String messageType = message.split(" ")[0]; // Update or New;
+		String component = message.split(" ")[1]; // Component id; "null" if new
 		ql.lock();
 		ol.lock();
-		String owner = owners.get(component);
-		if(owner != null) {
-			if(owner.compareTo(clientID) == 0) {
-				owners.put(component, "none");
+
+		// Define the id of the created object
+		if(messageType.compareTo("New") == 0) {
+			il.lock();
+			component = String.valueOf(Server.id);
+			message.replace("null", component);
+			Server.id += 1;
+			il.unlock();
+		}
+		else {
+			String owner = owners.get(component);
+			if(owner != null) {
+				if(owner.compareTo(clientID) == 0) {
+					owners.put(component, "none");
+				}
 			}
 		}
 		ol.unlock();
 		for(LinkedBlockingQueue<String> q: updateQueues) {
 			q.offer(message);
 		}
+		ll.lock();
+		try {
+			log.put(message);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		ll.unlock();
 		ql.unlock();
 	}
-	
+
 	public String sendBackEditRequest(String message) {
 		String success = "false";
 		ol.lock();
@@ -125,7 +147,7 @@ class ClientMessageHandler implements Runnable {
 		System.out.println("works: " + success);
 		return success;
 	}
-	
+
 	// TODO eventually we want to be able to send ALL updates. so we want a delimeter and loop in client
 	public String sendBackUpdates() {
 		String message = "";
@@ -139,44 +161,41 @@ class ClientMessageHandler implements Runnable {
 		ql.unlock();
 		return message;
 	}
-	
+
 	public void run() {
 		try {
 			BufferedReader inputFromClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			PrintWriter outputToClient = new PrintWriter(socket.getOutputStream());
 			String message;
 			while(true) {
-				//int message = Integer.parseInt(q.poll()); //This needs to be an UpdateMessage or some other custom type
 				int messageType = Integer.parseInt(inputFromClient.readLine());
-				
+
 				switch(messageType) {
 				case ScrumChatConstants.SEND_EDIT_REQUEST: {
 					message = inputFromClient.readLine();
 					System.out.println("SEND REQUEST: " + message);
 					handleEditRequest(message);
 					break;
-					//should this actually be something server looks for?
 				}
+				// TWO CASES. NEW OBJECT and CHANGED OBJECT
 				case ScrumChatConstants.SEND_UPDATE: {
 					message = inputFromClient.readLine();
 					handleUpdate(message);
 					break;
-					//format a message to update a client about what has changed
 				}
 				case ScrumChatConstants.GET_EDIT_REQUEST: {
 					message = inputFromClient.readLine();
 					System.out.println("GET REQUEST: " + message);
 					outputToClient.println(sendBackEditRequest(message));
-	                 outputToClient.flush();
-	                 break;
+					outputToClient.flush();
+					break;
 					//pop another message from the queue
 					//this message should be the object to be edited
 				}
 				case ScrumChatConstants.GET_UPDATE: {
 					outputToClient.println(sendBackUpdates());
-	                outputToClient.flush();
-	                break;
-					//should the server care about this?
+					outputToClient.flush();
+					break;
 				}
 				}
 			}
