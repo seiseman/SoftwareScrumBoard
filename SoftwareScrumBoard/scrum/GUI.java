@@ -118,14 +118,14 @@ public class GUI extends Application{
 			@Override
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
-				TableView<String> table = new TableView<String>();
+				TableView<UserStory> table = new TableView<UserStory>();
 				table.setEditable(true);
 				TableColumn titleCol = new TableColumn("Title");
 				titleCol.setMinWidth(100);
-				titleCol.setCellValueFactory(new PropertyValueFactory<String, String>("title"));
-				ObservableList<String> tableStories = FXCollections.observableArrayList();
+				titleCol.setCellValueFactory(new PropertyValueFactory<UserStory, String>("story"));
+				ObservableList<UserStory> tableStories = FXCollections.observableArrayList();
 				for (UserStory s: stories) {
-					tableStories.add(s.getStory());
+					tableStories.add(s);
 				}
 				table.setItems(tableStories);
 				System.out.println(table.getItems());
