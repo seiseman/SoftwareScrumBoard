@@ -7,8 +7,10 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -24,6 +26,7 @@ import javafx.scene.Node;
 public class GUI extends Application{
 
 	Pane root;
+	Stage stage;
 	Scene scene;
 	int width = 1000;
 	int height = 800;
@@ -31,12 +34,11 @@ public class GUI extends Application{
 	int secondsDown;
 	ObservableList<Node> ObservableList;
 
-	Button userStories;
-	Button productBacklog;
-	Button sprintBacklog;
-	Button scrumBoard;
-	Button burndown;
-	boolean test = false;
+	//Information for different tabs and changing scenes
+	Button productBacklog, sprintBacklog, burndown, viewDetails, createStory; 
+	
+	//User Stories buttons
+	Button editStory, deleteStory;
 
 	Rectangle[] GCSStatusArray;
 
@@ -47,54 +49,15 @@ public class GUI extends Application{
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
-		Stage stage = primaryStage;
+		stage = primaryStage;
 		root = new AnchorPane();
 		ObservableList = root.getChildren();
 
-		scrumBoard = new Button("Scrum Board");
-		scrumBoard.setLayoutX(600);
-		scrumBoard.setLayoutY(0);
-		scrumBoard.setPrefWidth(200);
-		root.getChildren().add(scrumBoard);
-
-		scrumBoard.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				// TODO Auto-generated method stub
-				test = true;
-			}
-		});
-
-		final TextField scrum = new TextField();
-		scrum.setText("Scrum Board");
-		scrum.setFont(Font.font("Verdana", FontWeight.BOLD, 30));
-		scrum.setPrefWidth(980);
-		scrum.setLayoutX(10);
-		scrum.setLayoutY(40);
-		scrum.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
-		root.getChildren().add(scrum);
-
-		userStories = new Button("User Stories");
-		userStories.setLayoutX(0);
-		userStories.setLayoutY(0);
-		userStories.setPrefWidth(200);
-		root.getChildren().add(userStories);
-
-		userStories.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				// TODO Auto-generated method stub
-				test = true;
-			}
-
-		});
-
 		productBacklog = new Button("Product Backlog");
-		productBacklog.setLayoutX(200);
+		productBacklog.setLayoutX(800);
 		productBacklog.setLayoutY(0);
 		productBacklog.setPrefWidth(200);
+		productBacklog.setPrefHeight(24);
 		root.getChildren().add(productBacklog);
 
 		productBacklog.setOnAction(new EventHandler<ActionEvent>() {
@@ -102,15 +65,15 @@ public class GUI extends Application{
 			@Override
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
-				test = true;
 			}
 
 		});
 
 		sprintBacklog = new Button("Sprint Backlog");
-		sprintBacklog.setLayoutX(400);
-		sprintBacklog.setLayoutY(0);
+		sprintBacklog.setLayoutX(800);
+		sprintBacklog.setLayoutY(25);
 		sprintBacklog.setPrefWidth(200);
+		sprintBacklog.setPrefHeight(24);
 		root.getChildren().add(sprintBacklog);
 
 		sprintBacklog.setOnAction(new EventHandler<ActionEvent>() {
@@ -118,14 +81,14 @@ public class GUI extends Application{
 			@Override
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
-				test = true;
 			}
 		});
 
 		burndown = new Button("Burndown Chart");
 		burndown.setLayoutX(800);
-		burndown.setLayoutY(0);
+		burndown.setLayoutY(50);
 		burndown.setPrefWidth(200);
+		burndown.setPrefHeight(24);
 		root.getChildren().add(burndown);
 
 		burndown.setOnAction(new EventHandler<ActionEvent>() {
@@ -133,7 +96,47 @@ public class GUI extends Application{
 			@Override
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
-				test = true;
+			}
+		});
+		
+		viewDetails = new Button("View Details");
+		viewDetails.setLayoutX(800);
+		viewDetails.setLayoutY(75);
+		viewDetails.setPrefWidth(200);
+		viewDetails.setPrefHeight(24);
+		root.getChildren().add(viewDetails);
+
+		viewDetails.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				// TODO Auto-generated method stub
+			}
+
+		});
+			
+		final TextField scrumTitle = new TextField();
+		scrumTitle.setText("Scrum Board");
+		scrumTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 40));
+		scrumTitle.setPrefWidth(680);
+		scrumTitle.setPrefHeight(80);
+		scrumTitle.setLayoutX(10);
+		scrumTitle.setLayoutY(10);
+		scrumTitle.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
+		root.getChildren().add(scrumTitle);
+		
+		createStory = new Button("Create Story");
+		createStory.setLayoutX(690);
+		createStory.setLayoutY(10);
+		createStory.setPrefWidth(100);
+		createStory.setPrefHeight(80);
+		root.getChildren().add(createStory);
+
+		burndown.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				// TODO Auto-generated method stub
 			}
 		});
 
@@ -231,7 +234,7 @@ public class GUI extends Application{
 		doneEdit.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
 		doneEdit.setEditable(true);
 		root.getChildren().add(doneEdit);
-
+			
 		/*
 		GCSStatusArray = new Rectangle[2];
 		GCSStatusArray[0] = new Rectangle(85,30);
@@ -245,8 +248,6 @@ public class GUI extends Application{
 		GCSStatusArray[1].setLayoutY(115);
 		root.getChildren().add(GCSStatusArray[1]);
 		*/
-
-
 
 		scene = new Scene(root, width, height);
 		stage.setScene(scene);
