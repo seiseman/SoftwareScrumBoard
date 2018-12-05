@@ -53,41 +53,10 @@ public class ScrumController implements Initializable {
 		});
 		
         // Start the transcript check thread
-        new Thread(new UpdateReceiver(gateway, toDoEdit)).start();
+        //new Thread(new UpdateReceiver(gateway, toDoEdit)).start();
 	}
 	
 	public void helloWorld () {
 		System.out.println("hello world");
 	}
-
 }
-
-class UpdateReceiver implements Runnable, ScrumChatConstants {
-    private ScrumClientGateway gateway; // Gateway to the server
-    private TextField text;
-    
-    /** Construct a thread */
-    public UpdateReceiver(ScrumClientGateway gateway,TextField text) {
-      this.gateway = gateway;
-      this.text = text;
-    }
-
-    /** Run a thread */
-    public void run() {
-      ArrayList<String> updates;
-      while(true) {
-    	  updates = gateway.getUpdates();
-          if(updates.size() > 0) {
-        	  /* This will need to change to be more general */
-        	  String newComment = updates.remove(0);
-        	  if(newComment.compareTo("END") != 0) {
-        		  Platform.runLater(()->text.setText(newComment.split(" ")[1]));
-        	  }
-          } else {
-              try {
-                  Thread.sleep(250);
-              } catch(InterruptedException ex) {}
-          }
-      }
-    }
-  }

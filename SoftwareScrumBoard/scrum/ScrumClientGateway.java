@@ -47,6 +47,27 @@ public class ScrumClientGateway implements ScrumChatConstants {
         outputLock.unlock();
     }
 
+    public String createObject(String comment) {
+    	String identifier = "null";
+    	outputLock.lock();
+        outputToServer.println(SEND_UPDATE);
+        outputToServer.println(comment);
+        System.out.println("Send Update: " + comment);
+        outputToServer.flush();
+        outputToServer.println(GET_NEW_ID);
+        outputToServer.flush();
+        inputLock.lock();
+        try {
+            identifier = inputFromServer.readLine();
+            System.out.println("Identifier: " + identifier);
+        } catch (IOException ex) {
+            Platform.runLater(() -> System.out.println("Error in getComment: " + ex.toString() + "\n"));
+        }
+        inputLock.unlock();
+        outputLock.unlock();
+        return identifier;
+    }
+
     public String editRequest(String comment) {
     	outputLock.lock();
         outputToServer.println(SEND_EDIT_REQUEST);

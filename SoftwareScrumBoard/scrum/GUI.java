@@ -2,6 +2,8 @@ package scrum;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.locks.ReentrantLock;
+
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -36,9 +38,12 @@ import javafx.scene.Node;
 
 public class GUI extends Application{
 
-    private double xoff = 50.0;
-    private double yoff = 37.5;
+	private double xoff = 50.0;
+	private double yoff = 37.5;
+	private ScrumClientGateway gateway;
+	private ReentrantLock listLock;
 
+	Random randomGenerator = new Random();
 	Pane root;
 	Stage stage;
 	Scene scene;
@@ -69,6 +74,8 @@ public class GUI extends Application{
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		listLock = new ReentrantLock();
+		gateway = new ScrumClientGateway();
 		stories = new ArrayList<UserStory>();
 		root = new AnchorPane();
 		ObservableList = root.getChildren();
@@ -200,7 +207,7 @@ public class GUI extends Application{
 			}
 		});
 
-		viewDetails = new Button("View Details");
+		viewDetails = new Button("View/Edit Details");
 		viewDetails.setLayoutX(800);
 		viewDetails.setLayoutY(75);
 		viewDetails.setPrefWidth(200);
@@ -212,11 +219,97 @@ public class GUI extends Application{
 			@Override
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
-				stage.setScene(detailsScene);
-				stage.setTitle("User Story Details");
-				stage.showAndWait();
-			}
+				if(selected != null) {
+					if(gateway.editRequest(selected.getId()).compareTo("true") == 0) {
+						System.out.println("hey");
+						saveStory = new Button("Save");
+						saveStory.setLayoutX(200);
+						saveStory.setLayoutY(10);
+						saveStory.setPrefWidth(75);
+						saveStory.setPrefHeight(25);
+						detailsPane.getChildren().add(saveStory);
 
+						final TextField story = new TextField();
+						story.setPromptText("Enter your story here");
+						//story.getText();
+						story.setLayoutX(10);
+						story.setLayoutY(10);
+						story.setPrefHeight(25);
+						story.setText(selected.getStory());
+						detailsPane.getChildren().add(story);
+
+						final TextField description = new TextField();
+						description.setPromptText("Enter your description here");
+						//description.getText();
+						description.setLayoutX(10);
+						description.setLayoutY(45);
+						description.setPrefHeight(25);
+						description.setText(selected.getDescription());
+						detailsPane.getChildren().add(description);
+
+						final TextField points = new TextField();
+						points.setPromptText("Enter the points here");
+						//points.getText();
+						points.setLayoutX(10);
+						points.setLayoutY(80);
+						points.setPrefHeight(25);
+						points.setText(String.valueOf(selected.getPoints()));
+						detailsPane.getChildren().add(points);
+
+						final TextField assignee = new TextField();
+						assignee.setPromptText("Enter the assignee here");
+						//assignee.getText();
+						assignee.setLayoutX(10);
+						assignee.setLayoutY(115);
+						assignee.setPrefHeight(25);
+						assignee.setText(selected.getAssignee());
+						detailsPane.getChildren().add(assignee);
+
+						final TextField comments = new TextField();
+						comments.setPromptText("Enter comments here");
+						//comments.getText();
+						comments.setLayoutX(10);
+						comments.setLayoutY(150);
+						comments.setPrefHeight(25);
+						comments.setText(selected.getComments());
+						detailsPane.getChildren().add(comments);
+
+						saveStory.setOnAction(d-> {
+							TextField dragBox = new TextField();
+							int pointsInt;
+							try {
+								pointsInt = Integer.parseInt(points.getText());
+							} catch(NumberFormatException e) {
+								pointsInt = 1;
+							}
+							selected.setDescription(description.getText());
+							selected.setStory(story.getText());
+							selected.setComments(comments.getText());
+							selected.setPoints(Integer.parseInt(points.getText()));
+							selected.setAssignee(assignee.getText());
+							selected.updateTextField();
+							String comment = "Update##" + selected.toString();
+							
+							/*		selected.getId() + "##"
+														+ description.getText() + "##"
+														+ story.getText() + "##"
+														+ selected.getStatus() + "##"
+														+ comments.getText() + "##"
+														+ points.getText() + "##"
+														+ assignee.getText() + "##"
+														+ selected.getCompletionDay();		*/											;
+							gateway.sendUpdate(comment);
+							selected.setIsOwner(false);
+							stage.close();
+						});
+
+						stage.setScene(detailsScene);
+						stage.setTitle("User Story Details");
+						stage.showAndWait();
+
+					}
+				}
+			}
 		});
 
 		final TextField scrumTitle = new TextField();
@@ -292,14 +385,14 @@ public class GUI extends Application{
 
 				saveStory.setOnAction(d-> {
 					TextField dragBox = new TextField();
-			        int pointsInt;
-			        try {
-			        	pointsInt = Integer.parseInt(points.getText());
-			        } catch(NumberFormatException e) {
-			        	pointsInt = 1;
-			        }
+					int pointsInt;
+					try {
+						pointsInt = Integer.parseInt(points.getText());
+					} catch(NumberFormatException e) {
+						pointsInt = 1;
+					}
 					UserStory newStory = new UserStory(description.getText(), story.getText(), "Stories", comments.getText(),
-										pointsInt, assignee.getText(), dragBox, 30);
+							pointsInt, assignee.getText(), dragBox, 30);
 					dragBox.setEditable(false);
 					dragBox.setFont(Font.font("Verdana", 20));
 					dragBox.setPrefWidth(100);
@@ -308,39 +401,55 @@ public class GUI extends Application{
 					dragBox.setLayoutX(20);
 					dragBox.setLayoutY(180);
 
-			        dragBox.setOnMouseDragged(e -> {
-			        	dragBox.setLayoutX(e.getSceneX() - xoff);
-			            dragBox.setLayoutY(e.getSceneY() - yoff);
-			        });
+					dragBox.setOnMouseDragged(e -> {
+						if(newStory.getIsOwner()) {
+							dragBox.setLayoutX(e.getSceneX() - xoff);
+							dragBox.setLayoutY(e.getSceneY() - yoff);
+						}
+					});
 
-			        dragBox.setOnMouseReleased(e -> {
-			        	dragBox.setLayoutX(e.getSceneX() - xoff);
-			            dragBox.setLayoutX(e.getSceneX() - yoff);
-			            double x = dragBox.getLayoutX();
-			            double y = dragBox.getLayoutY();
-			            if(x >= 0 && x < 206) {
-			            	newStory.setStatus("Stories");
-			            }
-			            else if(x >= 206 && x < 402) {
-			            	newStory.setStatus("To Do");
-			            }
-			            else if(x >= 402 && x < 598) {
-			            	newStory.setStatus("In Progress");
-			            }
-			            else if (x >= 598 && x < 794) {
-			            	newStory.setStatus("Testing");
-			            }
-			            else {
-			            	newStory.setStatus("Done");
-			            }
-			        });
+					dragBox.setOnMouseReleased(e -> {
+						if(newStory.getIsOwner()) {
+							dragBox.setLayoutX(e.getSceneX() - xoff);
+							dragBox.setLayoutX(e.getSceneX() - yoff);
+							double x = dragBox.getLayoutX();
+							double y = dragBox.getLayoutY();
+							if(x >= 0 && x < 206) {
+								newStory.setStatus("Stories");
+							}
+							else if(x >= 206 && x < 402) {
+								newStory.setStatus("To Do");
+							}
+							else if(x >= 402 && x < 598) {
+								newStory.setStatus("In Progress");
+							}
+							else if (x >= 598 && x < 794) {
+								newStory.setStatus("Testing");
+							}
+							else {
+								int low = 1;
+								int high = 30;
+								newStory.setStatus("Done");
+								newStory.setCompletionDay(randomGenerator.nextInt(high-low) + low);
+							}
+							String comment = "Update##" + newStory.toString();
+							gateway.sendUpdate(comment);
+							newStory.setIsOwner(false);
+						}
+					});
 
-			        dragBox.setOnMouseClicked(e -> {
-			        	selected = newStory;
-			        });
-
+					dragBox.setOnMouseClicked(e -> {
+						selected = newStory;
+						if(gateway.editRequest(newStory.getId()).compareTo("true") == 0) {
+							newStory.setIsOwner(true);
+						}
+					});
+					listLock.lock();
 					ObservableList.add(newStory.getTextField());
+					String comment = "New##" + newStory.toString();
+					newStory.setId(gateway.createObject(comment));
 					stories.add(newStory);
+					listLock.unlock();
 					stage.close();
 				});
 
@@ -351,14 +460,14 @@ public class GUI extends Application{
 			}
 		});
 
-		final TextField stories = new TextField();
-		stories.setText("Stories");
-		stories.setFont(Font.font("Verdana", 20));
-		stories.setPrefWidth(196);
-		stories.setLayoutX(10);
-		stories.setLayoutY(120);
-		stories.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
-		root.getChildren().add(stories);
+		final TextField storiesTitle = new TextField();
+		storiesTitle.setText("Stories");
+		storiesTitle.setFont(Font.font("Verdana", 20));
+		storiesTitle.setPrefWidth(196);
+		storiesTitle.setLayoutX(10);
+		storiesTitle.setLayoutY(120);
+		storiesTitle.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
+		root.getChildren().add(storiesTitle);
 
 		final TextField storiesEdit = new TextField();
 		storiesEdit.setFont(Font.font("Verdana", 20));
@@ -458,13 +567,14 @@ public class GUI extends Application{
 		GCSStatusArray[1].setLayoutX(500);
 		GCSStatusArray[1].setLayoutY(115);
 		root.getChildren().add(GCSStatusArray[1]);
-		*/
+		 */
 
 		scene = new Scene(root, width, height);
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Scrum Board");
 		primaryStage.show();
 
+		new Thread(new UpdateReceiver(gateway, stories, ObservableList, listLock)).start();
 	}
 
 }

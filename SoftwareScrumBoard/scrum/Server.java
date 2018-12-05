@@ -32,6 +32,9 @@ public class Server {
 	Server() {
 		queuesLock = new ReentrantLock();
 		ownersLock = new ReentrantLock();
+		idLock = new ReentrantLock();
+		logLock = new ReentrantLock();
+		log = new LinkedBlockingQueue<String>();
 		q = new  ArrayList<LinkedBlockingQueue<String>>();
 		owners = new HashMap<String,String>();
 		new Thread( () -> {
@@ -70,6 +73,7 @@ class ClientMessageHandler implements Runnable {
 	ReentrantLock il;
 	ReentrantLock ll;
 	HashMap<String, String> owners;
+	int newestId;
 
 	public ClientMessageHandler(Socket socket, int clientID, ArrayList<LinkedBlockingQueue<String>> updateQueues,
 			HashMap<String, String> owners, ReentrantLock queuesLock, ReentrantLock ownersLock, ReentrantLock idLock,
@@ -99,8 +103,8 @@ class ClientMessageHandler implements Runnable {
 	}
 
 	public void handleUpdate(String message) {
-		String messageType = message.split(" ")[0]; // Update or New;
-		String component = message.split(" ")[1]; // Component id; "null" if new
+		String messageType = message.split("##")[0]; // Update or New;
+		String component = message.split("##")[1]; // Component id; "null" if new
 		ql.lock();
 		ol.lock();
 
@@ -108,6 +112,7 @@ class ClientMessageHandler implements Runnable {
 		if(messageType.compareTo("New") == 0) {
 			il.lock();
 			component = String.valueOf(Server.id);
+			newestId = Server.id;
 			message.replace("null", component);
 			Server.id += 1;
 			il.unlock();
@@ -122,7 +127,9 @@ class ClientMessageHandler implements Runnable {
 		}
 		ol.unlock();
 		for(LinkedBlockingQueue<String> q: updateQueues) {
-			q.offer(message);
+			if(q != updateQueues.get(Integer.parseInt(clientID))) {
+				q.offer(message);
+			}
 		}
 		ll.lock();
 		try {
@@ -154,7 +161,7 @@ class ClientMessageHandler implements Runnable {
 		String popped = "";
 		ql.lock();
 		popped = updateQueues.get(Integer.parseInt(clientID)).poll();
-		System.out.println("my message: " + popped);
+	//	System.out.println("my message: " + popped);
 		if(popped != null) {
 			message = popped;
 		}
@@ -181,6 +188,11 @@ class ClientMessageHandler implements Runnable {
 				case ScrumChatConstants.SEND_UPDATE: {
 					message = inputFromClient.readLine();
 					handleUpdate(message);
+					break;
+				}
+				case ScrumChatConstants.GET_NEW_ID: {
+					outputToClient.println(newestId);
+					outputToClient.flush();
 					break;
 				}
 				case ScrumChatConstants.GET_EDIT_REQUEST: {
