@@ -68,7 +68,7 @@ public class ScrumClientGateway implements ScrumChatConstants {
         outputLock.unlock();
         return update;
     }
-    
+
     // Fetch comment n of the transcript from the server.
     public ArrayList<String> getUpdates() {
     	outputLock.lock();
