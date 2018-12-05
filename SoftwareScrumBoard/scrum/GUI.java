@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
@@ -37,8 +38,12 @@ public class GUI extends Application{
 	//Information for different tabs and changing scenes
 	Button createStory, productBacklog, sprintBacklog, burndown, viewDetails; 
 	Scene createScene, productScene, sprintScene, burndownScene, detailsScene; 
+	Pane createPane, productPane, sprintPane, burndownPane, detailsPane;
 	
-	//User Stories buttons
+	//Create story information
+	Button saveStory;
+	
+	//Details buttons
 	Button editStory, deleteStory;
 
 	Rectangle[] GCSStatusArray;
@@ -52,6 +57,17 @@ public class GUI extends Application{
 
 		root = new AnchorPane();
 		ObservableList = root.getChildren();
+		
+		productPane = new AnchorPane();
+		productScene = new Scene(productPane, 100, 100);
+		createPane = new AnchorPane();
+		createScene = new Scene(createPane, 300, 185);
+		sprintPane = new AnchorPane();
+		sprintScene = new Scene(sprintPane, width/2, height/2);
+		burndownPane = new AnchorPane();
+		burndownScene = new Scene(burndownPane, width/2, height/2);
+		detailsPane = new AnchorPane();
+		detailsScene = new Scene(detailsPane, width/2, height/2);
 		
 		stage = new Stage();
 		stage.initModality(Modality.APPLICATION_MODAL);
@@ -68,8 +84,7 @@ public class GUI extends Application{
 			@Override
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
-				stage.setTitle("Product Backlog");
-				stage.showAndWait();
+				
 			}
 
 		});
@@ -149,6 +164,65 @@ public class GUI extends Application{
 			@Override
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
+				
+				saveStory = new Button("Save");
+				saveStory.setLayoutX(200);
+				saveStory.setLayoutY(10);
+				saveStory.setPrefWidth(75);
+				saveStory.setPrefHeight(25);
+				createPane.getChildren().add(saveStory);
+				
+				final TextField story = new TextField();
+				story.setPromptText("Enter your story here");
+				story.getText();
+				story.setLayoutX(10);
+				story.setLayoutY(10);
+				story.setPrefHeight(25);
+				createPane.getChildren().add(story);
+				
+				final TextField description = new TextField();
+				description.setPromptText("Enter your description here");
+				description.getText();
+				description.setLayoutX(10);
+				description.setLayoutY(45);
+				description.setPrefHeight(25);
+				createPane.getChildren().add(description);
+				
+				final TextField points = new TextField();
+				points.setPromptText("Enter the points here");
+				points.getText();
+				points.setLayoutX(10);
+				points.setLayoutY(80);
+				points.setPrefHeight(25);
+				createPane.getChildren().add(points);
+				
+				final TextField assignee = new TextField();
+				assignee.setPromptText("Enter the assignee here");
+				assignee.getText();
+				assignee.setLayoutX(10);
+				assignee.setLayoutY(115);
+				assignee.setPrefHeight(25);
+				createPane.getChildren().add(assignee);
+				
+				final TextField comments = new TextField();
+				comments.setPromptText("Enter comments here");
+				comments.getText();
+				comments.setLayoutX(10);
+				comments.setLayoutY(150);
+				comments.setPrefHeight(25);
+				createPane.getChildren().add(comments);
+				
+				saveStory.setOnAction(new EventHandler<ActionEvent>() {
+
+					@Override
+					public void handle(ActionEvent event) {
+						// TODO Auto-generated method stub
+						
+					}
+
+				});
+				
+				stage.setScene(createScene);
 				stage.setTitle("Create New User Story");
 				stage.showAndWait();
 				
