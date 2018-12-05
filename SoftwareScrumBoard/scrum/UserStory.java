@@ -4,7 +4,6 @@ import javafx.scene.control.TextField;
 
 public class UserStory {
 
-	String name;
 	String description;
 	String story;
 	String status;
@@ -14,9 +13,8 @@ public class UserStory {
 	int completionDay;
 	TextField textBox;
 	
-	public UserStory(String name, String description, String story, String status,
+	public UserStory(String description, String story, String status,
 					 String comments, int points, String assignee, TextField textBox, int completionDay) {
-		this.name = name;
 		this.description = description;
 		this.story = story;
 		this.status = status;
@@ -27,10 +25,6 @@ public class UserStory {
 		this.textBox.setText(this.story);
 		this.textBox.setEditable(false);
 		this.completionDay = completionDay;
-	}
-	
-	public String getName() {
-		return this.name;
 	}
 	
 	public String getDescription() {
@@ -63,10 +57,6 @@ public class UserStory {
 	
 	public TextField getTextField() {
 		return this.textBox;
-	}
-	
-	public void setName(String n) {
-		this.name = n;
 	}
 	
 	public void setDescription(String d) {

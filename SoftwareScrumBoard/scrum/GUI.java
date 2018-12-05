@@ -30,6 +30,9 @@ import javafx.scene.Node;
 
 public class GUI extends Application{
 
+    private double xoff = 50.0;
+    private double yoff = 37.5;
+	
 	Pane root;
 	Stage stage;
 	Scene scene;
@@ -37,6 +40,7 @@ public class GUI extends Application{
 	int height = 800;
 	int scale = 25;
 	ObservableList<Node> ObservableList;
+	UserStory selected;
 
 	//Information for different tabs and changing scenes
 	Button createStory, productBacklog, sprintBacklog, burndown, viewDetails;
@@ -49,6 +53,8 @@ public class GUI extends Application{
 	//Details buttons
 	Button editStory, deleteStory;
 
+	ArrayList<UserStory> stories;
+	
 	Rectangle[] GCSStatusArray;
 
 	public static void main(String[] args) {
@@ -57,7 +63,7 @@ public class GUI extends Application{
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-
+		stories = new ArrayList<UserStory>();
 		root = new AnchorPane();
 		ObservableList = root.getChildren();
 
@@ -196,7 +202,7 @@ public class GUI extends Application{
 
 				final TextField story = new TextField();
 				story.setPromptText("Enter your story here");
-				story.getText();
+				//story.getText();
 				story.setLayoutX(10);
 				story.setLayoutY(10);
 				story.setPrefHeight(25);
@@ -204,7 +210,7 @@ public class GUI extends Application{
 
 				final TextField description = new TextField();
 				description.setPromptText("Enter your description here");
-				description.getText();
+				//description.getText();
 				description.setLayoutX(10);
 				description.setLayoutY(45);
 				description.setPrefHeight(25);
@@ -212,7 +218,7 @@ public class GUI extends Application{
 
 				final TextField points = new TextField();
 				points.setPromptText("Enter the points here");
-				points.getText();
+				//points.getText();
 				points.setLayoutX(10);
 				points.setLayoutY(80);
 				points.setPrefHeight(25);
@@ -220,7 +226,7 @@ public class GUI extends Application{
 
 				final TextField assignee = new TextField();
 				assignee.setPromptText("Enter the assignee here");
-				assignee.getText();
+				//assignee.getText();
 				assignee.setLayoutX(10);
 				assignee.setLayoutY(115);
 				assignee.setPrefHeight(25);
@@ -228,20 +234,63 @@ public class GUI extends Application{
 
 				final TextField comments = new TextField();
 				comments.setPromptText("Enter comments here");
-				comments.getText();
+				//comments.getText();
 				comments.setLayoutX(10);
 				comments.setLayoutY(150);
 				comments.setPrefHeight(25);
 				createPane.getChildren().add(comments);
 
-				saveStory.setOnAction(new EventHandler<ActionEvent>() {
+				saveStory.setOnAction(d-> {
+					TextField dragBox = new TextField();
+			        int pointsInt;
+			        try {
+			        	pointsInt = Integer.parseInt(points.getText());
+			        } catch(NumberFormatException e) {
+			        	pointsInt = 1;
+			        }
+					UserStory newStory = new UserStory(description.getText(), story.getText(), "Stories", comments.getText(),
+										pointsInt, assignee.getText(), dragBox, -1);
+					dragBox.setEditable(false);
+					dragBox.setFont(Font.font("Verdana", 20));
+					dragBox.setPrefWidth(100);
+					dragBox.setPrefHeight(75);
+					dragBox.setStyle("-fx-background-color: white;-fx-border-color:black;");
+					dragBox.setLayoutX(20);
+					dragBox.setLayoutY(180);
 
-					@Override
-					public void handle(ActionEvent event) {
-						// TODO Auto-generated method stub
-
-					}
-
+			        dragBox.setOnMouseDragged(e -> {
+			        	dragBox.setLayoutX(e.getSceneX() - xoff);
+			            dragBox.setLayoutY(e.getSceneY() - yoff);
+			        });
+			        
+			        dragBox.setOnMouseReleased(e -> {
+			        	dragBox.setLayoutX(e.getSceneX() - xoff);
+			            dragBox.setLayoutX(e.getSceneX() - yoff);
+			            double x = dragBox.getLayoutX();
+			            double y = dragBox.getLayoutY();
+			            if(x >= 0 && x < 206) {
+			            	newStory.setStatus("Stories");
+			            }
+			            else if(x >= 206 && x < 402) {
+			            	newStory.setStatus("To Do");
+			            }
+			            else if(x >= 402 && x < 598) {
+			            	newStory.setStatus("In Progress");
+			            }
+			            else if (x >= 598 && x < 794) {
+			            	newStory.setStatus("Testing");
+			            }
+			            else {
+			            	newStory.setStatus("Done");
+			            }
+			        });
+			        
+			        dragBox.setOnMouseClicked(e -> {
+			        	selected = newStory;
+			        });
+			        
+					ObservableList.add(newStory.getTextField());
+					stage.close();
 				});
 
 				stage.setScene(createScene);
@@ -267,7 +316,7 @@ public class GUI extends Application{
 		storiesEdit.setLayoutX(10);
 		storiesEdit.setLayoutY(160);
 		storiesEdit.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
-		storiesEdit.setEditable(true);
+		storiesEdit.setEditable(false);
 		root.getChildren().add(storiesEdit);
 
 		final TextField toDo = new TextField();
@@ -286,7 +335,7 @@ public class GUI extends Application{
 		toDoEdit.setLayoutX(206);
 		toDoEdit.setLayoutY(160);
 		toDoEdit.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
-		toDoEdit.setEditable(true);
+		toDoEdit.setEditable(false);
 		root.getChildren().add(toDoEdit);
 
 		final TextField inProgress = new TextField();
@@ -305,7 +354,7 @@ public class GUI extends Application{
 		inProgressEdit.setLayoutX(402);
 		inProgressEdit.setLayoutY(160);
 		inProgressEdit.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
-		inProgressEdit.setEditable(true);
+		inProgressEdit.setEditable(false);
 		root.getChildren().add(inProgressEdit);
 
 		final TextField testing = new TextField();
@@ -324,7 +373,7 @@ public class GUI extends Application{
 		testingEdit.setLayoutX(598);
 		testingEdit.setLayoutY(160);
 		testingEdit.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
-		testingEdit.setEditable(true);
+		testingEdit.setEditable(false);
 		root.getChildren().add(testingEdit);
 
 		final TextField done = new TextField();
@@ -343,7 +392,7 @@ public class GUI extends Application{
 		doneEdit.setLayoutX(794);
 		doneEdit.setLayoutY(160);
 		doneEdit.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
-		doneEdit.setEditable(true);
+		doneEdit.setEditable(false);
 		root.getChildren().add(doneEdit);
 
 		/*
