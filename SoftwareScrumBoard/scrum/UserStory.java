@@ -1,20 +1,32 @@
 package scrum;
 
-import java.util.ArrayList;
+import javafx.scene.control.TextField;
 
 public class UserStory {
 
 	String name;
 	String description;
 	String story;
-	int status;
-	String title;
-	ArrayList<String> comments;
+	String status;
+	String comments;
 	int points;
 	String assignee;
+	int completionDay;
+	TextField textBox;
 	
-	public UserStory() {
-		
+	public UserStory(String name, String description, String story, String status,
+					 String comments, int points, String assignee, TextField textBox, int completionDay) {
+		this.name = name;
+		this.description = description;
+		this.story = story;
+		this.status = status;
+		this.comments = comments;
+		this.points = points;
+		this.assignee = assignee;
+		this.textBox = textBox;
+		this.textBox.setText(this.story);
+		this.textBox.setEditable(false);
+		this.completionDay = completionDay;
 	}
 	
 	public String getName() {
@@ -29,15 +41,11 @@ public class UserStory {
 		return this.story;
 	}
 	
-	public int getStatus() {
+	public String getStatus() {
 		return this.status;
 	}
 	
-	public String getTitle() {
-		return this.title;
-	}
-	
-	public ArrayList<String> getComments() {
+	public String getComments() {
 		return this.comments;
 	}
 	
@@ -47,6 +55,14 @@ public class UserStory {
 	
 	public String getAssignee() {
 		return this.assignee;
+	}
+	
+	public int getCompletionDay() {
+		return this.completionDay;
+	}
+	
+	public TextField getTextField() {
+		return this.textBox;
 	}
 	
 	public void setName(String n) {
@@ -61,16 +77,12 @@ public class UserStory {
 		this.story = s;
 	}
 	
-	public void setStatus(int s) {
+	public void setStatus(String s) {
 		this.status = s;
 	}
 	
-	public void setTitle(String t) {
-		this.title = t;
-	}
-	
-	public void addComment(String c) {
-		this.comments.add(c);
+	public void setComments(String c) {
+		comments = c;
 	}
 	
 	public void setPoints(int p) {
@@ -79,6 +91,14 @@ public class UserStory {
 	
 	public void setAssignee(String a) {
 		this.assignee = a;
+	}
+	
+	public void setCompletionDay(int cd) {
+		this.completionDay = cd;
+	}
+	
+	public void setTextBox(TextField tb) {
+		this.textBox = tb;
 	}
 	
 }
