@@ -87,7 +87,9 @@ public class GUI extends Application{
 			@Override
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
-
+				stage.setScene(productScene);
+				stage.setTitle("Product Backlog");
+				stage.showAndWait();
 			}
 
 		});
@@ -104,6 +106,7 @@ public class GUI extends Application{
 			@Override
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
+				stage.setScene(sprintScene);
 				stage.setTitle("Sprint Backlog");
 				stage.showAndWait();
 			}
@@ -153,6 +156,7 @@ public class GUI extends Application{
 			@Override
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
+				stage.setScene(detailsScene);
 				stage.setTitle("User Story Details");
 				stage.showAndWait();
 			}
