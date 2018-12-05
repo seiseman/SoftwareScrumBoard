@@ -10,6 +10,7 @@ public class UserStory {
 	int status;
 	String title;
 	ArrayList<String> comments;
+	int points;
 	
 	public UserStory() {
 		
@@ -39,6 +40,10 @@ public class UserStory {
 		return this.comments;
 	}
 	
+	public int getPoints() {
+		return this.points;
+	}
+	
 	public void setName(String n) {
 		this.name = n;
 	}
@@ -61,6 +66,10 @@ public class UserStory {
 	
 	public void addComment(String c) {
 		this.comments.add(c);
+	}
+	
+	public void setPoints(int p) {
+		this.points = p;
 	}
 	
 }
