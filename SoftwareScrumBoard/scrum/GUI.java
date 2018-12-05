@@ -250,7 +250,7 @@ public class GUI extends Application{
 
 		scene = new Scene(root, width, height);
 		stage.setScene(scene);
-		stage.setTitle("NNX Drone Simulation");
+		stage.setTitle("Scrum Board");
 		stage.show();
 
 	}

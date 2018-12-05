@@ -18,3 +18,9 @@
 /UserStories.class
 /HandleAClient.class
 /Server.class
+/Client.class
+/ClientMessageHandler.class
+/ScrumChatConstants.class
+/ScrumClientGateway.class
+/UpdateMessage.class
+/UpdateReceiver.class
