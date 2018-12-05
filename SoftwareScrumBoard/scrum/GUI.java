@@ -5,6 +5,9 @@ import java.util.Random;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -36,13 +39,13 @@ public class GUI extends Application{
 	ObservableList<Node> ObservableList;
 
 	//Information for different tabs and changing scenes
-	Button createStory, productBacklog, sprintBacklog, burndown, viewDetails; 
-	Scene createScene, productScene, sprintScene, burndownScene, detailsScene; 
+	Button createStory, productBacklog, sprintBacklog, burndown, viewDetails;
+	Scene createScene, productScene, sprintScene, burndownScene, detailsScene;
 	Pane createPane, productPane, sprintPane, burndownPane, detailsPane;
-	
+
 	//Create story information
 	Button saveStory;
-	
+
 	//Details buttons
 	Button editStory, deleteStory;
 
@@ -57,7 +60,7 @@ public class GUI extends Application{
 
 		root = new AnchorPane();
 		ObservableList = root.getChildren();
-		
+
 		productPane = new AnchorPane();
 		productScene = new Scene(productPane, 100, 100);
 		createPane = new AnchorPane();
@@ -68,7 +71,7 @@ public class GUI extends Application{
 		burndownScene = new Scene(burndownPane, width/2, height/2);
 		detailsPane = new AnchorPane();
 		detailsScene = new Scene(detailsPane, width/2, height/2);
-		
+
 		stage = new Stage();
 		stage.initModality(Modality.APPLICATION_MODAL);
 
@@ -84,7 +87,7 @@ public class GUI extends Application{
 			@Override
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 		});
@@ -118,11 +121,26 @@ public class GUI extends Application{
 			@Override
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
+				NumberAxis xAxis = new NumberAxis();
+				NumberAxis yAxis = new NumberAxis();
+				xAxis.setLabel("Days in Sprint");
+				LineChart<Number, Number> lineChart = new LineChart<Number, Number>(xAxis, yAxis);
+				lineChart.setTitle("Project Burndown");
+				XYChart.Series series = new XYChart.Series();
+				series.setName("data");
+				series.getData().add(new XYChart.Data(1, 25));
+				series.getData().add(new XYChart.Data(4, 20));
+				series.getData().add(new XYChart.Data(6, 12));
+				series.getData().add(new XYChart.Data(10, 8));
+				series.getData().add(new XYChart.Data(16, 3));
+				Scene scene = new Scene(lineChart, 600, 400);
+				lineChart.getData().add(series);
+				stage.setScene(scene);
 				stage.setTitle("Burndown Chart");
 				stage.showAndWait();
 			}
 		});
-		
+
 		viewDetails = new Button("View Details");
 		viewDetails.setLayoutX(800);
 		viewDetails.setLayoutY(75);
@@ -140,7 +158,7 @@ public class GUI extends Application{
 			}
 
 		});
-			
+
 		final TextField scrumTitle = new TextField();
 		scrumTitle.setText("Scrum Board");
 		scrumTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 40));
@@ -151,7 +169,7 @@ public class GUI extends Application{
 		scrumTitle.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
 		scrumTitle.setEditable(false);
 		root.getChildren().add(scrumTitle);
-		
+
 		createStory = new Button("Create Story");
 		createStory.setLayoutX(690);
 		createStory.setLayoutY(10);
@@ -164,14 +182,14 @@ public class GUI extends Application{
 			@Override
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
-				
+
 				saveStory = new Button("Save");
 				saveStory.setLayoutX(200);
 				saveStory.setLayoutY(10);
 				saveStory.setPrefWidth(75);
 				saveStory.setPrefHeight(25);
 				createPane.getChildren().add(saveStory);
-				
+
 				final TextField story = new TextField();
 				story.setPromptText("Enter your story here");
 				story.getText();
@@ -179,7 +197,7 @@ public class GUI extends Application{
 				story.setLayoutY(10);
 				story.setPrefHeight(25);
 				createPane.getChildren().add(story);
-				
+
 				final TextField description = new TextField();
 				description.setPromptText("Enter your description here");
 				description.getText();
@@ -187,7 +205,7 @@ public class GUI extends Application{
 				description.setLayoutY(45);
 				description.setPrefHeight(25);
 				createPane.getChildren().add(description);
-				
+
 				final TextField points = new TextField();
 				points.setPromptText("Enter the points here");
 				points.getText();
@@ -195,7 +213,7 @@ public class GUI extends Application{
 				points.setLayoutY(80);
 				points.setPrefHeight(25);
 				createPane.getChildren().add(points);
-				
+
 				final TextField assignee = new TextField();
 				assignee.setPromptText("Enter the assignee here");
 				assignee.getText();
@@ -203,7 +221,7 @@ public class GUI extends Application{
 				assignee.setLayoutY(115);
 				assignee.setPrefHeight(25);
 				createPane.getChildren().add(assignee);
-				
+
 				final TextField comments = new TextField();
 				comments.setPromptText("Enter comments here");
 				comments.getText();
@@ -211,21 +229,21 @@ public class GUI extends Application{
 				comments.setLayoutY(150);
 				comments.setPrefHeight(25);
 				createPane.getChildren().add(comments);
-				
+
 				saveStory.setOnAction(new EventHandler<ActionEvent>() {
 
 					@Override
 					public void handle(ActionEvent event) {
 						// TODO Auto-generated method stub
-						
+
 					}
 
 				});
-				
+
 				stage.setScene(createScene);
 				stage.setTitle("Create New User Story");
 				stage.showAndWait();
-				
+
 			}
 		});
 
@@ -323,7 +341,7 @@ public class GUI extends Application{
 		doneEdit.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
 		doneEdit.setEditable(true);
 		root.getChildren().add(doneEdit);
-			
+
 		/*
 		GCSStatusArray = new Rectangle[2];
 		GCSStatusArray[0] = new Rectangle(85,30);
