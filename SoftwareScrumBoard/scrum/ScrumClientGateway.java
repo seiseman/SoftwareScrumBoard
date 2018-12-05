@@ -24,7 +24,7 @@ public class ScrumClientGateway implements ScrumChatConstants {
     	outputLock = new ReentrantLock();
         try {
             // Create a socket to connect to the server
-            Socket socket = new Socket("10.25.142.163", 8000);
+            Socket socket = new Socket("localhost", 8000);
 
             // Create an output stream to send data to the server
             outputToServer = new PrintWriter(socket.getOutputStream());
@@ -68,7 +68,7 @@ public class ScrumClientGateway implements ScrumChatConstants {
         outputLock.unlock();
         return update;
     }
-    
+
     // Fetch comment n of the transcript from the server.
     public ArrayList<String> getUpdates() {
     	outputLock.lock();
