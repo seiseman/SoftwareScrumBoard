@@ -290,6 +290,7 @@ public class GUI extends Application{
 			        });
 			        
 					ObservableList.add(newStory.getTextField());
+					stories.add(newStory);
 					stage.close();
 				});
 
