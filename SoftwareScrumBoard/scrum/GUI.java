@@ -38,7 +38,7 @@ public class GUI extends Application{
 
     private double xoff = 50.0;
     private double yoff = 37.5;
-	
+
 	Pane root;
 	Stage stage;
 	Scene scene;
@@ -60,7 +60,7 @@ public class GUI extends Application{
 	Button editStory, deleteStory;
 
 	ArrayList<UserStory> stories;
-	
+
 	Rectangle[] GCSStatusArray;
 
 	public static void main(String[] args) {
@@ -113,7 +113,7 @@ public class GUI extends Application{
 				table.setItems(tableStories);
 				table.getColumns().addAll(titleCol);
 				productPane.getChildren().add(table);
-				
+
 				stage.setScene(productScene);
 				stage.setTitle("Product Backlog");
 				stage.showAndWait();
@@ -144,7 +144,7 @@ public class GUI extends Application{
 				}
 				table.setItems(tableStories);
 				table.getColumns().addAll(titleCol);
-				
+
 				sprintPane.getChildren().add(table);
 				stage.setScene(sprintScene);
 				stage.setTitle("Sprint Backlog");
@@ -171,11 +171,27 @@ public class GUI extends Application{
 				lineChart.setTitle("Project Burndown");
 				XYChart.Series series = new XYChart.Series();
 				series.setName("data");
-				series.getData().add(new XYChart.Data(1, 25));
-				series.getData().add(new XYChart.Data(4, 20));
-				series.getData().add(new XYChart.Data(6, 12));
-				series.getData().add(new XYChart.Data(10, 8));
-				series.getData().add(new XYChart.Data(16, 3));
+				int totalCompDays = 0;
+				int totalPoints = 0;
+				for (UserStory u : stories) {
+					totalPoints += u.points;
+					//series.getData().add(new XYChart.Data(u.completionDay, u.points));
+				}
+				series.getData().add(new XYChart.Data(1, totalPoints));
+				for (int x = 2; x<=30; x++) {
+					boolean comp = false;
+					for (UserStory u : stories) {
+						if (u.completionDay == x) {
+							if (totalPoints > 0) {
+								totalPoints = totalPoints - u.points;
+								comp = true;
+							}
+						}
+					}
+					if (comp) {
+						series.getData().add(new XYChart.Data(x, totalPoints));
+					}
+				}
 				Scene scene = new Scene(lineChart, 600, 400);
 				lineChart.getData().add(series);
 				stage.setScene(scene);
@@ -283,7 +299,7 @@ public class GUI extends Application{
 			        	pointsInt = 1;
 			        }
 					UserStory newStory = new UserStory(description.getText(), story.getText(), "Stories", comments.getText(),
-										pointsInt, assignee.getText(), dragBox, -1);
+										pointsInt, assignee.getText(), dragBox, 30);
 					dragBox.setEditable(false);
 					dragBox.setFont(Font.font("Verdana", 20));
 					dragBox.setPrefWidth(100);
@@ -296,7 +312,7 @@ public class GUI extends Application{
 			        	dragBox.setLayoutX(e.getSceneX() - xoff);
 			            dragBox.setLayoutY(e.getSceneY() - yoff);
 			        });
-			        
+
 			        dragBox.setOnMouseReleased(e -> {
 			        	dragBox.setLayoutX(e.getSceneX() - xoff);
 			            dragBox.setLayoutX(e.getSceneX() - yoff);
@@ -318,11 +334,11 @@ public class GUI extends Application{
 			            	newStory.setStatus("Done");
 			            }
 			        });
-			        
+
 			        dragBox.setOnMouseClicked(e -> {
 			        	selected = newStory;
 			        });
-			        
+
 					ObservableList.add(newStory.getTextField());
 					stories.add(newStory);
 					stage.close();
