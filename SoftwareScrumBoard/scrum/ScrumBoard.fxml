@@ -8,7 +8,7 @@
 
 
 <AnchorPane fx:controller="scrum.ScrumController" xmlns:fx="http://javafx.com/fxml/1">
-	<!-- Add New Drone Button -->
+	<!-- Add New Drone Button
     <Button text="Scrum Board"
             prefWidth="200" layoutX="600" layoutY="0"
             onAction="#helloWorld">
@@ -16,18 +16,22 @@
         <Button text="User Stories"
             prefWidth="200" layoutX="0" layoutY="0"
             onAction="#helloWorld">
-    </Button>
+    </Button> -->
     <Button text="Product Backlog"
-            prefWidth="200" layoutX="200" layoutY="0"
+            prefWidth="200" prefHeight="24" layoutX="800" layoutY="0"
             onAction="#helloWorld">
     </Button>
     <Button text="Sprint Backlog"
-            prefWidth="200" layoutX="400" layoutY="0"
+            prefWidth="200" prefHeight="24" layoutX="800" layoutY="25"
             onAction="#helloWorld">
     </Button>
     <Button text="Burndown Chart"
-            prefWidth="200" layoutX="800" layoutY="0"
+            prefWidth="200" prefHeight="24" layoutX="800" layoutY="50"
             onAction="#helloWorld">
+    </Button>
+    <Button text="View Details"
+    		prefWidth="200" prefHeight="24" layoutX="800" layoutY="75"
+    		onAction="#helloWorld">
     </Button>
     <TextField text="Scrum Board" prefWidth="980" layoutX="10" layoutY="40"
     			style="-fx-background-color: transparent;-fx-border-color:black;" editable="false">
