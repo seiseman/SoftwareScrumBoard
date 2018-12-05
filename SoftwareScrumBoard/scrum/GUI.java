@@ -17,6 +17,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -31,11 +32,11 @@ public class GUI extends Application{
 	int width = 1000;
 	int height = 800;
 	int scale = 25;
-	int secondsDown;
 	ObservableList<Node> ObservableList;
 
 	//Information for different tabs and changing scenes
-	Button productBacklog, sprintBacklog, burndown, viewDetails, createStory; 
+	Button createStory, productBacklog, sprintBacklog, burndown, viewDetails; 
+	Scene createScene, productScene, sprintScene, burndownScene, detailsScene; 
 	
 	//User Stories buttons
 	Button editStory, deleteStory;
@@ -49,9 +50,11 @@ public class GUI extends Application{
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
-		stage = primaryStage;
 		root = new AnchorPane();
 		ObservableList = root.getChildren();
+		
+		stage = new Stage();
+		stage.initModality(Modality.APPLICATION_MODAL);
 
 		productBacklog = new Button("Product Backlog");
 		productBacklog.setLayoutX(800);
@@ -65,6 +68,8 @@ public class GUI extends Application{
 			@Override
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
+				stage.setTitle("Product Backlog");
+				stage.showAndWait();
 			}
 
 		});
@@ -81,6 +86,8 @@ public class GUI extends Application{
 			@Override
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
+				stage.setTitle("Sprint Backlog");
+				stage.showAndWait();
 			}
 		});
 
@@ -96,6 +103,8 @@ public class GUI extends Application{
 			@Override
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
+				stage.setTitle("Burndown Chart");
+				stage.showAndWait();
 			}
 		});
 		
@@ -111,6 +120,8 @@ public class GUI extends Application{
 			@Override
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
+				stage.setTitle("User Story Details");
+				stage.showAndWait();
 			}
 
 		});
@@ -123,6 +134,7 @@ public class GUI extends Application{
 		scrumTitle.setLayoutX(10);
 		scrumTitle.setLayoutY(10);
 		scrumTitle.setStyle("-fx-background-color: transparent;-fx-border-color:black;");
+		scrumTitle.setEditable(false);
 		root.getChildren().add(scrumTitle);
 		
 		createStory = new Button("Create Story");
@@ -132,11 +144,14 @@ public class GUI extends Application{
 		createStory.setPrefHeight(80);
 		root.getChildren().add(createStory);
 
-		burndown.setOnAction(new EventHandler<ActionEvent>() {
+		createStory.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
+				stage.setTitle("Create New User Story");
+				stage.showAndWait();
+				
 			}
 		});
 
@@ -250,9 +265,9 @@ public class GUI extends Application{
 		*/
 
 		scene = new Scene(root, width, height);
-		stage.setScene(scene);
-		stage.setTitle("Scrum Board");
-		stage.show();
+		primaryStage.setScene(scene);
+		primaryStage.setTitle("Scrum Board");
+		primaryStage.show();
 
 	}
 
