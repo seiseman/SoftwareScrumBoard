@@ -1,8 +1,11 @@
 package scrum;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -29,16 +32,16 @@ public class Server {
 	private ReentrantLock ownersLock;
 	private ReentrantLock idLock;
 	private ReentrantLock logLock;
-	private Scanner in;
-	private FileOutputStream out;
+	private BufferedReader in;
+	//private FileOutputStream out;
 	public static int id = 1;
 
 	//TODO It is recommended practice to always immediately follow a call to lock with a try block, most typically in a before/after construction such as:
 
 	Server() {
 		try {
-			in = new Scanner(new File("scrum/persistance.txt"));
-			out = new FileOutputStream("scrum/persistance.txt");
+			in = new BufferedReader(new FileReader("scrum/persistance.txt"));
+			//out = new FileOutputStream("scrum/persistance.txt");
 		} catch (Exception e) {
 			System.out.println("Failed to create streams");
 		}
@@ -49,6 +52,7 @@ public class Server {
 		log = new LinkedBlockingQueue<String>();
 		q = new  ArrayList<LinkedBlockingQueue<String>>();
 		owners = new HashMap<String,String>();
+		bootFile();
 		new Thread( () -> {
 			try {
 				// Create a server socket
@@ -75,16 +79,28 @@ public class Server {
 	}
 
 	public void bootFile() {
-		while (in.hasNextLine()) {
-			log.add(in.nextLine());
+		try {
+		String line = in.readLine();
+		while (line != null) {
+			log.add(line);
+			line = in.readLine();
 		}
-		in.close();
+		} catch (IOException e) {
+			System.out.println("persistance reading error");
+		}
+		System.out.println(log.size());
+		for (String s : log) {
+			System.out.println(s);
+		}
 	}
 }
 
 class ClientMessageHandler implements Runnable {
 	private Socket socket;
 	private String clientID;
+	private static FileWriter fw;
+	private static BufferedWriter bw;
+	private static PrintWriter out;
 	ArrayList<LinkedBlockingQueue<String>> updateQueues;
 	LinkedBlockingQueue<String> log;
 	ReentrantLock ql;
@@ -106,8 +122,21 @@ class ClientMessageHandler implements Runnable {
 		this.ll = logLock;
 		this.log = log;
 		this.owners = owners;
+		try {
+			fw = new FileWriter("scrum/persistance.txt", true);
+			bw = new BufferedWriter(fw);
+			out = new PrintWriter(bw);
+		} catch (Exception e) {
+			System.out.println("Failed to create streams");
+		}
 		this.ql.lock();
+		//adds the clients queue to the list of queues
 		updateQueues.add(new LinkedBlockingQueue<String>());
+
+		//now fill the queue with the log
+		for (String s : log) {
+			updateQueues.get(Integer.parseInt(this.clientID)).add(s);
+		}
 		this.ql.unlock();
 	}
 	public void handleEditRequest(String message) {
@@ -155,6 +184,8 @@ class ClientMessageHandler implements Runnable {
 		ll.lock();
 		try {
 			log.put(message);
+			out.println(message);
+			out.flush();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
