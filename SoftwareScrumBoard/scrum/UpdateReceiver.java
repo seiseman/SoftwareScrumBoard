@@ -32,15 +32,25 @@ class UpdateReceiver implements Runnable, ScrumChatConstants {
         	  String newComment = updates.remove(0);
         	  String identifier = newComment.split("##")[1];
         	  boolean isFound = false;
+        	  UserStory toDelete = null;
+        	  boolean willDelete = false;
         	  listLock.lock();
         	  for(UserStory s: stories) {
         		  if(s.getId().compareTo(identifier) == 0) { 
         			  Platform.runLater(()->s.consumeUpdate(newComment));
         			  isFound = true;
+        			  if(newComment.split("##")[0].compareTo("Delete") == 0) {
+        				  toDelete = s;
+        				  willDelete = true;
+        			  }
         			  break;
         		  }
         	  }
-        	  if(!isFound) {
+        	  if(willDelete) {
+        		  stories.remove(toDelete);
+        		  toDelete.getTextField().setVisible(false);
+        	  }
+        	  else if(!isFound) {
         		  UserStory newStory = new UserStory(newComment);
         		  System.out.println("HEY DOG");
         		  stories.add(newStory);

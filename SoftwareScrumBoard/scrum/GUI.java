@@ -101,9 +101,9 @@ public class GUI extends Application{
 			}
 		});
 
-		dragBox.setOnMouseClicked(e -> {
-			selected = newStory;
+		dragBox.setOnMousePressed(e -> {
 			if(gateway.editRequest(newStory.getId()).compareTo("true") == 0) {
+				selected = newStory;
 				newStory.setIsOwner(true);
 			}
 		});
@@ -344,11 +344,16 @@ public class GUI extends Application{
 														+ selected.getCompletionDay();		*/											;
 							gateway.sendUpdate(comment);
 							selected.setIsOwner(false);
+							selected = null;
 							stage.close();
 						});
 						
 						deleteStory.setOnAction(d-> {
+							String comment = "Delete##" + selected.toString();
+							selected.getTextField().setVisible(false);
+							gateway.sendUpdate(comment);
 							selected.setIsOwner(false);
+							selected = null;
 							stage.close();
 						});
 
@@ -426,7 +431,6 @@ public class GUI extends Application{
 
 				final TextField comments = new TextField();
 				comments.setPromptText("Enter comments here");
-				//comments.getText();
 				comments.setLayoutX(10);
 				comments.setLayoutY(150);
 				comments.setPrefHeight(25);
@@ -487,9 +491,9 @@ public class GUI extends Application{
 						}
 					});
 
-					dragBox.setOnMouseClicked(e -> {
-						selected = newStory;
+					dragBox.setOnMousePressed(e -> {
 						if(gateway.editRequest(newStory.getId()).compareTo("true") == 0) {
+							selected = newStory;
 							newStory.setIsOwner(true);
 						}
 					});
