@@ -1,5 +1,8 @@
 package scrum;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -8,6 +11,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.ReentrantLock;
@@ -25,11 +29,19 @@ public class Server {
 	private ReentrantLock ownersLock;
 	private ReentrantLock idLock;
 	private ReentrantLock logLock;
+	private Scanner in;
+	private FileOutputStream out;
 	public static int id = 1;
 
 	//TODO It is recommended practice to always immediately follow a call to lock with a try block, most typically in a before/after construction such as:
 
 	Server() {
+		try {
+			in = new Scanner(new File("scrum/persistance.txt"));
+			out = new FileOutputStream("scrum/persistance.txt");
+		} catch (Exception e) {
+			System.out.println("Failed to create streams");
+		}
 		queuesLock = new ReentrantLock();
 		ownersLock = new ReentrantLock();
 		idLock = new ReentrantLock();
@@ -60,6 +72,13 @@ public class Server {
 
 	public static void main(String[] args) {
 		Server s = new Server();
+	}
+
+	public void bootFile() {
+		while (in.hasNextLine()) {
+			log.add(in.nextLine());
+		}
+		in.close();
 	}
 }
 
