@@ -4,36 +4,27 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.locks.ReentrantLock;
 
-import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 
 public class GUI extends Application{
@@ -62,7 +53,7 @@ public class GUI extends Application{
 	Button saveStory;
 
 	//Details buttons
-	Button editStory, deleteStory;
+	Button deleteStory;
 
 	ArrayList<UserStory> stories;
 
@@ -268,13 +259,19 @@ public class GUI extends Application{
 				// TODO Auto-generated method stub
 				if(selected != null) {
 					if(gateway.editRequest(selected.getId()).compareTo("true") == 0) {
-						System.out.println("hey");
 						saveStory = new Button("Save");
 						saveStory.setLayoutX(200);
 						saveStory.setLayoutY(10);
 						saveStory.setPrefWidth(75);
 						saveStory.setPrefHeight(25);
 						detailsPane.getChildren().add(saveStory);
+						
+						deleteStory = new Button("Delete");
+						deleteStory.setLayoutX(200);
+						deleteStory.setLayoutY(45);
+						deleteStory.setPrefWidth(75);
+						deleteStory.setPrefHeight(25);
+						detailsPane.getChildren().add(deleteStory);
 
 						final TextField story = new TextField();
 						story.setPromptText("Enter your story here");
@@ -346,6 +343,11 @@ public class GUI extends Application{
 														+ assignee.getText() + "##"
 														+ selected.getCompletionDay();		*/											;
 							gateway.sendUpdate(comment);
+							selected.setIsOwner(false);
+							stage.close();
+						});
+						
+						deleteStory.setOnAction(d-> {
 							selected.setIsOwner(false);
 							stage.close();
 						});
