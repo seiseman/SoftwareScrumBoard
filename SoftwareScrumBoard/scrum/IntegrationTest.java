@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-public class IntegrationTest1 extends JavaFXFix {
+public class IntegrationTest extends JavaFXFix {
 	@Test
 	public void test() {
 		Server s = new Server();
@@ -17,7 +17,13 @@ public class IntegrationTest1 extends JavaFXFix {
 			e.printStackTrace();
 		}
 		ArrayList<String> updates = gateway2.getUpdates();
-		assert(updates.get(0).compareTo("Update##1##asdf##sdf##To Do##fds##5##asff##30##256.5##177.5") == 0);
+		String s1 = updates.get(0);
+		while (updates.size() != 0) {
+			updates = gateway2.getUpdates();
+			if (updates.size() != 0) 
+				s1 = updates.get(0);
+		}
+		assert(s1.compareTo("Update##1##asdf##sdf##To Do##fds##5##asff##30##256.5##177.5") == 0);
 		String update1 = gateway.editRequest("1");
 		try {
 			Thread.sleep(5000);
