@@ -90,19 +90,19 @@ public class GUI extends Application{
 				double y = dragBox.getLayoutY();
 				if(x >= 0 && x < 206) {
 					newStory.setStatus("Stories");
-					newStory.setCompletionDay(-1);
+					newStory.setCompletionDay(30);
 				}
 				else if(x >= 206 && x < 402) {
 					newStory.setStatus("To Do");
-					newStory.setCompletionDay(-1);
+					newStory.setCompletionDay(30);
 				}
 				else if(x >= 402 && x < 598) {
 					newStory.setStatus("In Progress");
-					newStory.setCompletionDay(-1);
+					newStory.setCompletionDay(30);
 				}
 				else if (x >= 598 && x < 794) {
 					newStory.setStatus("Testing");
-					newStory.setCompletionDay(-1);
+					newStory.setCompletionDay(30);
 				}
 				else {
 					int low = 1;
@@ -478,19 +478,19 @@ public class GUI extends Application{
 							double y = dragBox.getLayoutY();
 							if(x >= 0 && x < 206) {
 								newStory.setStatus("Stories");
-								newStory.setCompletionDay(-1);
+								newStory.setCompletionDay(30);
 							}
 							else if(x >= 206 && x < 402) {
 								newStory.setStatus("To Do");
-								newStory.setCompletionDay(-1);
+								newStory.setCompletionDay(30);
 							}
 							else if(x >= 402 && x < 598) {
 								newStory.setStatus("In Progress");
-								newStory.setCompletionDay(-1);
+								newStory.setCompletionDay(30);
 							}
 							else if (x >= 598 && x < 794) {
 								newStory.setStatus("Testing");
-								newStory.setCompletionDay(-1);
+								newStory.setCompletionDay(30);
 							}
 							else {
 								int low = 1;
