@@ -4,21 +4,24 @@ import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;
 
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
-import javafx.scene.Node;
 
-class UpdateReceiver implements Runnable, ScrumChatConstants {
+/**
+ * 
+ * @author Alex Ayala, Steven Eisemann, Nathan Rao, Nick Rocco
+ * Class used to constantly request updates from server
+ *
+ */
+
+public class UpdateReceiver implements Runnable, ScrumChatConstants {
     private ScrumClientGateway gateway; // Gateway to the server
     private ArrayList<UserStory> stories;
-    private ObservableList<Node> ObservableList;
     private ReentrantLock listLock;
     
     /** Construct a thread */
-    public UpdateReceiver(ScrumClientGateway gateway, ArrayList<UserStory> stories, ObservableList<Node> ObservableList,
+    public UpdateReceiver(ScrumClientGateway gateway, ArrayList<UserStory> stories,
     					  ReentrantLock listLock) {
       this.gateway = gateway;
       this.stories = stories;
-      this.ObservableList = ObservableList;
       this.listLock = listLock;
     }
 
@@ -26,15 +29,18 @@ class UpdateReceiver implements Runnable, ScrumChatConstants {
     public void run() {
       ArrayList<String> updates;
       while(true) {
+    	  // Retrieve updates from server
     	  updates = gateway.getUpdates();
+    	  
+    	  // If there are updates to consume
           if(updates.size() > 0) {
-        	  /* This will need to change to be more general */
         	  String newComment = updates.remove(0);
         	  String identifier = newComment.split("##")[1];
         	  boolean isFound = false;
         	  UserStory toDelete = null;
         	  boolean willDelete = false;
         	  listLock.lock();
+        	  // Find the updated story (if it's there) and update accordingly if it's found
         	  for(UserStory s: stories) {
         		  if(s.getId().compareTo(identifier) == 0) { 
         			  Platform.runLater(()->s.consumeUpdate(newComment));
@@ -46,13 +52,15 @@ class UpdateReceiver implements Runnable, ScrumChatConstants {
         			  break;
         		  }
         	  }
+        	  // Delete component if that's the update
         	  if(willDelete) {
         		  stories.remove(toDelete);
         		  toDelete.getTextField().setVisible(false);
+        		  Platform.runLater(()-> GUI.selected = null);
         	  }
+        	  // Create new object if it wasn't found in stories list
         	  else if(!isFound) {
         		  UserStory newStory = new UserStory(newComment);
-        		  System.out.println("HEY DOG");
         		  stories.add(newStory);
         		  Platform.runLater(()-> GUI.setUpTextField(newStory.getTextField(), newStory));
         	  }

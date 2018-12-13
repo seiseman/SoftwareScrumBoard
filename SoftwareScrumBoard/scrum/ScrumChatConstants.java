@@ -1,5 +1,12 @@
 package scrum;
 
+/**
+ * 
+ * @author Alex Ayala, Steven Eisemann, Nathan Rao, Nick Rocco
+ * Class used as enum for defining message types
+ *
+ */
+
 public interface ScrumChatConstants {
 
     public static int SEND_EDIT_REQUEST = 1;

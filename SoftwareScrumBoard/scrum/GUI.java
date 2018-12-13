@@ -27,6 +27,13 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 
+/**
+ * 
+ * @author Alex Ayala, Steven Eisemann, Nathan Rao, Nick Rocco
+ * Class used for maintaining user interaction. Also starts client application
+ *
+ */
+
 public class GUI extends Application{
 
 	static double xoff = 50.0;
@@ -63,7 +70,10 @@ public class GUI extends Application{
 		launch(args);
 	}
 	
+	// Set up handlers for the new text field (dragBox)
 	public static void setUpTextField(TextField dragBox, UserStory newStory) {
+		
+		// Set up moving text box when dragged
 		dragBox.setOnMouseDragged(e -> {
 			if(newStory.getIsOwner()) {
 				dragBox.setLayoutX(e.getSceneX() - xoff);
@@ -71,6 +81,7 @@ public class GUI extends Application{
 			}
 		});
 
+		// Sends update upon releasing object. Updates story object with changes accordingly.
 		dragBox.setOnMouseReleased(e -> {
 			if(newStory.getIsOwner()) {
 				dragBox.setLayoutX(e.getSceneX() - xoff);
@@ -79,15 +90,19 @@ public class GUI extends Application{
 				double y = dragBox.getLayoutY();
 				if(x >= 0 && x < 206) {
 					newStory.setStatus("Stories");
+					newStory.setCompletionDay(-1);
 				}
 				else if(x >= 206 && x < 402) {
 					newStory.setStatus("To Do");
+					newStory.setCompletionDay(-1);
 				}
 				else if(x >= 402 && x < 598) {
 					newStory.setStatus("In Progress");
+					newStory.setCompletionDay(-1);
 				}
 				else if (x >= 598 && x < 794) {
 					newStory.setStatus("Testing");
+					newStory.setCompletionDay(-1);
 				}
 				else {
 					int low = 1;
@@ -101,6 +116,7 @@ public class GUI extends Application{
 			}
 		});
 
+		// On mouse down, try getting permission from server to edit the story
 		dragBox.setOnMousePressed(e -> {
 			if(gateway.editRequest(newStory.getId()).compareTo("true") == 0) {
 				selected = newStory;
@@ -110,6 +126,7 @@ public class GUI extends Application{
 		ObservableList.add(newStory.getTextField());
 	}
 
+	// Initialize GUI
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		listLock = new ReentrantLock();
@@ -132,6 +149,7 @@ public class GUI extends Application{
 		stage = new Stage();
 		stage.initModality(Modality.APPLICATION_MODAL);
 
+		// Set up product backlog button
 		productBacklog = new Button("Product Backlog");
 		productBacklog.setLayoutX(800);
 		productBacklog.setLayoutY(0);
@@ -139,11 +157,11 @@ public class GUI extends Application{
 		productBacklog.setPrefHeight(24);
 		root.getChildren().add(productBacklog);
 
+		// Open product backlog window upon click. Populate table based on stories that aren't done
 		productBacklog.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
-				// TODO Auto-generated method stub
 				TableView<UserStory> table = new TableView<UserStory>();
 				table.setEditable(true);
 				TableColumn titleCol = new TableColumn("Title");
@@ -166,6 +184,7 @@ public class GUI extends Application{
 
 		});
 
+		// Set up sprint backlog button
 		sprintBacklog = new Button("Sprint Backlog");
 		sprintBacklog.setLayoutX(800);
 		sprintBacklog.setLayoutY(25);
@@ -173,11 +192,11 @@ public class GUI extends Application{
 		sprintBacklog.setPrefHeight(24);
 		root.getChildren().add(sprintBacklog);
 
+		// Open sprint backlog window upon click. Populate table based on stories
 		sprintBacklog.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
-				// TODO Auto-generated method stub
 				TableView<UserStory> table = new TableView<UserStory>();
 				table.setEditable(true);
 				TableColumn titleCol = new TableColumn("Title");
@@ -197,6 +216,7 @@ public class GUI extends Application{
 			}
 		});
 
+		// Set up burndown chart button
 		burndown = new Button("Burndown Chart");
 		burndown.setLayoutX(800);
 		burndown.setLayoutY(50);
@@ -204,11 +224,11 @@ public class GUI extends Application{
 		burndown.setPrefHeight(24);
 		root.getChildren().add(burndown);
 
+		// Open burndown window upon click. Populate graph based on completed stories
 		burndown.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
-				// TODO Auto-generated method stub
 				NumberAxis xAxis = new NumberAxis();
 				NumberAxis yAxis = new NumberAxis();
 				xAxis.setLabel("Days in Sprint");
@@ -220,7 +240,6 @@ public class GUI extends Application{
 				int totalPoints = 0;
 				for (UserStory u : stories) {
 					totalPoints += u.points;
-					//series.getData().add(new XYChart.Data(u.completionDay, u.points));
 				}
 				series.getData().add(new XYChart.Data(1, totalPoints));
 				for (int x = 2; x<=30; x++) {
@@ -245,6 +264,7 @@ public class GUI extends Application{
 			}
 		});
 
+		// Set up view/edit details button
 		viewDetails = new Button("View/Edit Details");
 		viewDetails.setLayoutX(800);
 		viewDetails.setLayoutY(75);
@@ -252,11 +272,11 @@ public class GUI extends Application{
 		viewDetails.setPrefHeight(24);
 		root.getChildren().add(viewDetails);
 
+		// Open window to view/edit/delete story upon click if given permission by server
 		viewDetails.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
-				// TODO Auto-generated method stub
 				if(selected != null) {
 					if(gateway.editRequest(selected.getId()).compareTo("true") == 0) {
 						saveStory = new Button("Save");
@@ -275,7 +295,6 @@ public class GUI extends Application{
 
 						final TextField story = new TextField();
 						story.setPromptText("Enter your story here");
-						//story.getText();
 						story.setLayoutX(10);
 						story.setLayoutY(10);
 						story.setPrefHeight(25);
@@ -284,7 +303,6 @@ public class GUI extends Application{
 
 						final TextField description = new TextField();
 						description.setPromptText("Enter your description here");
-						//description.getText();
 						description.setLayoutX(10);
 						description.setLayoutY(45);
 						description.setPrefHeight(25);
@@ -293,7 +311,6 @@ public class GUI extends Application{
 
 						final TextField points = new TextField();
 						points.setPromptText("Enter the points here");
-						//points.getText();
 						points.setLayoutX(10);
 						points.setLayoutY(80);
 						points.setPrefHeight(25);
@@ -302,7 +319,6 @@ public class GUI extends Application{
 
 						final TextField assignee = new TextField();
 						assignee.setPromptText("Enter the assignee here");
-						//assignee.getText();
 						assignee.setLayoutX(10);
 						assignee.setLayoutY(115);
 						assignee.setPrefHeight(25);
@@ -311,13 +327,13 @@ public class GUI extends Application{
 
 						final TextField comments = new TextField();
 						comments.setPromptText("Enter comments here");
-						//comments.getText();
 						comments.setLayoutX(10);
 						comments.setLayoutY(150);
 						comments.setPrefHeight(25);
 						comments.setText(selected.getComments());
 						detailsPane.getChildren().add(comments);
 
+						// Upon click, save the story w/ new edits and send an update message to server
 						saveStory.setOnAction(d-> {
 							TextField dragBox = new TextField();
 							int pointsInt;
@@ -329,25 +345,18 @@ public class GUI extends Application{
 							selected.setDescription(description.getText());
 							selected.setStory(story.getText());
 							selected.setComments(comments.getText());
-							selected.setPoints(Integer.parseInt(points.getText()));
+							selected.setPoints(pointsInt);
 							selected.setAssignee(assignee.getText());
 							selected.updateTextField();
 							String comment = "Update##" + selected.toString();
 							
-							/*		selected.getId() + "##"
-														+ description.getText() + "##"
-														+ story.getText() + "##"
-														+ selected.getStatus() + "##"
-														+ comments.getText() + "##"
-														+ points.getText() + "##"
-														+ assignee.getText() + "##"
-														+ selected.getCompletionDay();		*/											;
 							gateway.sendUpdate(comment);
 							selected.setIsOwner(false);
 							selected = null;
 							stage.close();
 						});
 						
+						// Upon click, delete the story and send an update message to server
 						deleteStory.setOnAction(d-> {
 							String comment = "Delete##" + selected.toString();
 							selected.getTextField().setVisible(false);
@@ -377,6 +386,7 @@ public class GUI extends Application{
 		scrumTitle.setEditable(false);
 		root.getChildren().add(scrumTitle);
 
+		// Set up create story button
 		createStory = new Button("Create Story");
 		createStory.setLayoutX(690);
 		createStory.setLayoutY(10);
@@ -384,11 +394,11 @@ public class GUI extends Application{
 		createStory.setPrefHeight(80);
 		root.getChildren().add(createStory);
 
+		// Upon click, open new story window
 		createStory.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
-				// TODO Auto-generated method stub
 
 				saveStory = new Button("Save");
 				saveStory.setLayoutX(200);
@@ -399,7 +409,6 @@ public class GUI extends Application{
 
 				final TextField story = new TextField();
 				story.setPromptText("Enter your story here");
-				//story.getText();
 				story.setLayoutX(10);
 				story.setLayoutY(10);
 				story.setPrefHeight(25);
@@ -407,7 +416,6 @@ public class GUI extends Application{
 
 				final TextField description = new TextField();
 				description.setPromptText("Enter your description here");
-				//description.getText();
 				description.setLayoutX(10);
 				description.setLayoutY(45);
 				description.setPrefHeight(25);
@@ -415,7 +423,6 @@ public class GUI extends Application{
 
 				final TextField points = new TextField();
 				points.setPromptText("Enter the points here");
-				//points.getText();
 				points.setLayoutX(10);
 				points.setLayoutY(80);
 				points.setPrefHeight(25);
@@ -423,7 +430,6 @@ public class GUI extends Application{
 
 				final TextField assignee = new TextField();
 				assignee.setPromptText("Enter the assignee here");
-				//assignee.getText();
 				assignee.setLayoutX(10);
 				assignee.setLayoutY(115);
 				assignee.setPrefHeight(25);
@@ -436,6 +442,7 @@ public class GUI extends Application{
 				comments.setPrefHeight(25);
 				createPane.getChildren().add(comments);
 
+				// Upon click, create new story and set handlers accordingly. Send update message to server
 				saveStory.setOnAction(d-> {
 					TextField dragBox = new TextField();
 					int pointsInt;
@@ -454,6 +461,7 @@ public class GUI extends Application{
 					dragBox.setLayoutX(20);
 					dragBox.setLayoutY(180);
 
+					// Make story move if dragged and owner
 					dragBox.setOnMouseDragged(e -> {
 						if(newStory.getIsOwner()) {
 							dragBox.setLayoutX(e.getSceneX() - xoff);
@@ -461,6 +469,7 @@ public class GUI extends Application{
 						}
 					});
 
+					// Send update message to server when mouse released of new position information
 					dragBox.setOnMouseReleased(e -> {
 						if(newStory.getIsOwner()) {
 							dragBox.setLayoutX(e.getSceneX() - xoff);
@@ -469,15 +478,19 @@ public class GUI extends Application{
 							double y = dragBox.getLayoutY();
 							if(x >= 0 && x < 206) {
 								newStory.setStatus("Stories");
+								newStory.setCompletionDay(-1);
 							}
 							else if(x >= 206 && x < 402) {
 								newStory.setStatus("To Do");
+								newStory.setCompletionDay(-1);
 							}
 							else if(x >= 402 && x < 598) {
 								newStory.setStatus("In Progress");
+								newStory.setCompletionDay(-1);
 							}
 							else if (x >= 598 && x < 794) {
 								newStory.setStatus("Testing");
+								newStory.setCompletionDay(-1);
 							}
 							else {
 								int low = 1;
@@ -491,6 +504,7 @@ public class GUI extends Application{
 						}
 					});
 
+					// On mouse pressed, try gaining permission from server to edit
 					dragBox.setOnMousePressed(e -> {
 						if(gateway.editRequest(newStory.getId()).compareTo("true") == 0) {
 							selected = newStory;
@@ -513,6 +527,7 @@ public class GUI extends Application{
 			}
 		});
 
+		// Set up story lanes
 		final TextField storiesTitle = new TextField();
 		storiesTitle.setText("Stories");
 		storiesTitle.setFont(Font.font("Verdana", 20));
@@ -608,26 +623,13 @@ public class GUI extends Application{
 		doneEdit.setEditable(false);
 		root.getChildren().add(doneEdit);
 
-		/*
-		GCSStatusArray = new Rectangle[2];
-		GCSStatusArray[0] = new Rectangle(85,30);
-		GCSStatusArray[0].setFill(Color.SPRINGGREEN);
-		GCSStatusArray[0].setLayoutX(500);
-		GCSStatusArray[0].setLayoutY(80);
-		root.getChildren().add(GCSStatusArray[0]);
-		GCSStatusArray[1] = new Rectangle(85,30);
-		GCSStatusArray[1].setFill(Color.SPRINGGREEN);
-		GCSStatusArray[1].setLayoutX(500);
-		GCSStatusArray[1].setLayoutY(115);
-		root.getChildren().add(GCSStatusArray[1]);
-		 */
-
 		scene = new Scene(root, width, height);
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Scrum Board");
 		primaryStage.show();
 
-		new Thread(new UpdateReceiver(gateway, stories, ObservableList, listLock)).start();
+		// Start thread to start receiving updates from server
+		new Thread(new UpdateReceiver(gateway, stories, listLock)).start();
 	}
 
 }

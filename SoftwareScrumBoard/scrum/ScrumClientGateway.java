@@ -11,7 +11,14 @@ import java.util.ArrayList;
 import javafx.application.Platform;
 import javafx.scene.control.TextArea;
 
-public class ScrumClientGateway implements ScrumChatConstants {
+/**
+ * 
+ * @author Alex Ayala, Steven Eisemann, Nathan Rao, Nick Rocco
+ * Class used for establishing connection to server and sending and receiving messages to and from server
+ *
+ */
+
+public class ScrumClientGateway {
 
     private PrintWriter outputToServer;
     private BufferedReader inputFromServer;
@@ -37,29 +44,27 @@ public class ScrumClientGateway implements ScrumChatConstants {
         }
     }
 
-    // Send a new comment to the server.
+    // Send a new update to the server
     public void sendUpdate(String comment) {
     	outputLock.lock();
-        outputToServer.println(SEND_UPDATE);
+        outputToServer.println(ScrumChatConstants.SEND_UPDATE);
         outputToServer.println(comment);
-        System.out.println("Send Update: " + comment);
         outputToServer.flush();
         outputLock.unlock();
     }
 
+    // Send component creation messages to server
     public String createObject(String comment) {
     	String identifier = "null";
     	outputLock.lock();
-        outputToServer.println(SEND_UPDATE);
+        outputToServer.println(ScrumChatConstants.SEND_UPDATE);
         outputToServer.println(comment);
-        System.out.println("Send Update: " + comment);
         outputToServer.flush();
-        outputToServer.println(GET_NEW_ID);
+        outputToServer.println(ScrumChatConstants.GET_NEW_ID);
         outputToServer.flush();
         inputLock.lock();
         try {
             identifier = inputFromServer.readLine();
-            System.out.println("Identifier: " + identifier);
         } catch (IOException ex) {
             Platform.runLater(() -> System.out.println("Error in getComment: " + ex.toString() + "\n"));
         }
@@ -68,20 +73,19 @@ public class ScrumClientGateway implements ScrumChatConstants {
         return identifier;
     }
 
+    // Sends an edit request on a component to the server
     public String editRequest(String comment) {
     	outputLock.lock();
-        outputToServer.println(SEND_EDIT_REQUEST);
+        outputToServer.println(ScrumChatConstants.SEND_EDIT_REQUEST);
         outputToServer.println(comment);
         outputToServer.flush();
-        outputToServer.println(GET_EDIT_REQUEST);
+        outputToServer.println(ScrumChatConstants.GET_EDIT_REQUEST);
         outputToServer.println(comment);
-        System.out.println("Send Request: " + comment);
         outputToServer.flush();
         String update = "false";
         inputLock.lock();
         try {
             update = inputFromServer.readLine();
-            System.out.println("Edit request: " + update);
         } catch (IOException ex) {
             Platform.runLater(() -> System.out.println("Error in getComment: " + ex.toString() + "\n"));
         }
@@ -90,10 +94,10 @@ public class ScrumClientGateway implements ScrumChatConstants {
         return update;
     }
 
-    // Fetch comment n of the transcript from the server.
+    // Retrieve updates from server
     public ArrayList<String> getUpdates() {
     	outputLock.lock();
-        outputToServer.println(GET_UPDATE);
+        outputToServer.println(ScrumChatConstants.GET_UPDATE);
         outputToServer.flush();
         String update;
         ArrayList<String> updates = new ArrayList<String>();
@@ -101,7 +105,6 @@ public class ScrumClientGateway implements ScrumChatConstants {
         try {
             update = inputFromServer.readLine();
             if(update.isEmpty() == false) {
-                System.out.println("Get Update: " + update);
             	updates.add(update);
             }
         } catch (IOException ex) {

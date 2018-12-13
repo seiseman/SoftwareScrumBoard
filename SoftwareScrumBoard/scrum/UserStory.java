@@ -1,7 +1,14 @@
 package scrum;
-
 import javafx.scene.control.TextField;
 import javafx.scene.text.Font;
+
+/**
+ * 
+ * @author Alex Ayala, Steven Eisemann, Nathan Rao, Nick Rocco
+ * Class used for representing user stories
+ *
+ */
+
 
 public class UserStory {
 
@@ -16,6 +23,7 @@ public class UserStory {
 	String id;
 	boolean isOwner;
 
+	// Constructor based on the various given fields
 	public UserStory(String description, String story, String status,
 			String comments, int points, String assignee, TextField textBox, int completionDay) {
 		this.description = description;
@@ -32,6 +40,7 @@ public class UserStory {
 		this.isOwner = false;
 	}
 
+	// Constructor based on receiving an update
 	public UserStory(String update) {
 		String[] splitUpdates = update.split("##");
 		id = splitUpdates[1];
@@ -52,11 +61,13 @@ public class UserStory {
 		textBox.setLayoutY(180);
 		textBox.setText(story);
 	}
-	
+
+	// Update the text of the update text field to contain the story's text
 	public void updateTextField() {
 		this.textBox.setText(this.story);
 	}
 
+	// Get methods for various fields
 	public boolean getIsOwner() {
 		return isOwner;
 	}
@@ -97,6 +108,7 @@ public class UserStory {
 		return this.textBox;
 	}
 
+	// Set methods for various fields
 	public void setDescription(String d) {
 		this.description = d;
 	}
@@ -137,13 +149,15 @@ public class UserStory {
 		this.isOwner = own;
 	}
 
+	// Method for string representation
 	public String toString() {
 		String str = id + "##" + description + "##" + story + "##" + status + "##" +
-					 comments + "##" + points + "##" + assignee + "##" + completionDay + "##" + textBox.getLayoutX() + "##"
-					 + textBox.getLayoutY();
+				comments + "##" + points + "##" + assignee + "##" + completionDay + "##" + textBox.getLayoutX() + "##"
+				+ textBox.getLayoutY();
 		return str;
 	}
 
+	// Parse update string and set fields according to the update
 	public void consumeUpdate(String update) {
 		String[] splitUpdates = update.split("##");
 		description = splitUpdates[2];
