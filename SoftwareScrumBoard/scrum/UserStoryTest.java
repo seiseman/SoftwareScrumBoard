@@ -3,6 +3,13 @@ import org.junit.Test;
 
 import javafx.scene.control.TextField;
 
+/**
+ * 
+ * @author Alex Ayala, Steven Eisemann, Nathan Rao, Nick Rocco
+ * Unit testing for UserStory class
+ *
+ */
+
 public class UserStoryTest extends JavaFXFix {
 	@Test
 	public void test() {

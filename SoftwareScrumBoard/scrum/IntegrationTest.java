@@ -3,6 +3,13 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
+/**
+ * 
+ * @author Alex Ayala, Steven Eisemann, Nathan Rao, Nick Rocco
+ * Integration testing for server and multiple clients
+ *
+ */
+
 public class IntegrationTest extends JavaFXFix {
 	@Test
 	public void test() {
